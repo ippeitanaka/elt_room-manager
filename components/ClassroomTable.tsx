@@ -23,6 +23,8 @@ const getClassroomColor = (classroom: string) => {
     "5F大教室": "bg-indigo-100",
     "7F大教室": "bg-orange-100",
     パソコン室: "bg-teal-100",
+    DT3階小教室: "bg-amber-100",
+    DT4階小教室: "bg-lime-100",
   }
   return colors[classroom] || "bg-white"
 }
@@ -37,6 +39,8 @@ const classroomOptions: ClassroomType[] = [
   "5F大教室",
   "7F大教室",
   "パソコン室",
+  "DT3階小教室",
+  "DT4階小教室",
 ]
 
 const renderColumnDropdown = (

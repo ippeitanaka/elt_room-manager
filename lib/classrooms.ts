@@ -11,6 +11,8 @@ export type ClassroomType =
   | "5F大教室"
   | "7F大教室"
   | "パソコン室"
+  | "DT3階小教室"
+  | "DT4階小教室"
 
 export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "自　習" | "補　習" | "再試験"
 
