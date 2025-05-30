@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { ClassroomTable } from "@/components/ClassroomTable"
 import { DatePicker } from "@/components/DatePicker"
 import type { DailyClassroomData, ClassroomType, TimeSlot } from "@/lib/classrooms"
+import type { ClassroomComment } from "@/lib/comments"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -16,6 +17,7 @@ interface ClassroomScheduleProps {
 export function ClassroomSchedule({ initialData, initialDate }: ClassroomScheduleProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate)
   const [dailyData, setDailyData] = useState<DailyClassroomData>(initialData)
+  const [comments, setComments] = useState<ClassroomComment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -24,6 +26,7 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
     setError(null)
     const dateString = format(date, "yyyy-MM-dd")
     try {
+      // 教室データを取得
       const response = await fetch(`/api/classroom-data?date=${dateString}&timestamp=${Date.now()}`, {
         cache: "no-store",
         headers: {
@@ -37,6 +40,15 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
       }
       const data = await response.json()
       setDailyData(data)
+
+      // コメントデータを取得
+      const commentsResponse = await fetch(`/api/classroom-comments?date=${dateString}&timestamp=${Date.now()}`, {
+        cache: "no-store",
+      })
+      if (commentsResponse.ok) {
+        const commentsData = await commentsResponse.json()
+        setComments(commentsData)
+      }
     } catch (err) {
       console.error("Failed to fetch assignments:", err)
       setError("データの取得に失敗しました。再読み込みしてください。")
@@ -111,7 +123,13 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
       ) : error ? (
         <div className="text-center py-4 text-red-500">{error}</div>
       ) : (
-        <ClassroomTable data={dailyData} isAdminView={false} onCellChange={handleCellChange} />
+        <ClassroomTable
+          data={dailyData}
+          isAdminView={false}
+          onCellChange={handleCellChange}
+          comments={comments}
+          date={format(selectedDate, "yyyy-MM-dd")}
+        />
       )}
       <div className="mt-8 flex justify-between items-center">
         <Link href="/admin">

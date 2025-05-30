@@ -5,12 +5,13 @@ import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 import { ClassroomTable } from "@/components/ClassroomTable"
 import { DatePicker } from "@/components/DatePicker"
-import { saveClassroomData, type ClassroomType, type DailyClassroomData } from "@/lib/classrooms"
+import { saveClassroomData, type ClassroomType, type DailyClassroomData, type TimeSlot } from "@/lib/classrooms"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase"
+import type { ClassroomComment } from "@/lib/comments"
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -18,6 +19,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState("")
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [dailyData, setDailyData] = useState<DailyClassroomData | null>(null)
+  const [comments, setComments] = useState<ClassroomComment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -47,6 +49,7 @@ export default function AdminPage() {
     setError(null)
     const dateString = format(date, "yyyy-MM-dd")
     try {
+      // 教室データを取得
       const response = await fetch(`/api/classroom-data?date=${dateString}&timestamp=${Date.now()}`, {
         cache: "no-store",
       })
@@ -56,6 +59,15 @@ export default function AdminPage() {
       }
       const data = await response.json()
       setDailyData(data)
+
+      // コメントデータを取得
+      const commentsResponse = await fetch(`/api/classroom-comments?date=${dateString}&timestamp=${Date.now()}`, {
+        cache: "no-store",
+      })
+      if (commentsResponse.ok) {
+        const commentsData = await commentsResponse.json()
+        setComments(commentsData)
+      }
     } catch (err) {
       console.error("Failed to fetch assignments:", err)
       setError(`データの取得に失敗しました。エラー: ${err instanceof Error ? err.message : JSON.stringify(err)}`)
@@ -108,6 +120,99 @@ export default function AdminPage() {
     })
   }, [])
 
+  const handleCommentChange = async (timeSlot: TimeSlot, group: string, classroom: string, comment: string) => {
+    if (!comment.trim()) {
+      alert("コメントを入力してください。")
+      return
+    }
+
+    setIsLoading(true)
+    const dateString = format(selectedDate, "yyyy-MM-dd")
+    try {
+      const response = await fetch("/api/classroom-comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          date: dateString,
+          time_slot: timeSlot,
+          class_group: group,
+          classroom,
+          comment,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("コメントの保存に失敗しました。")
+      }
+
+      // コメントリストを更新
+      const existingCommentIndex = comments.findIndex((c) => c.time_slot === timeSlot && c.class_group === group)
+
+      if (existingCommentIndex >= 0) {
+        // 既存のコメントを更新
+        const updatedComments = [...comments]
+        updatedComments[existingCommentIndex] = {
+          ...updatedComments[existingCommentIndex],
+          comment,
+          classroom,
+          updated_at: new Date().toISOString(),
+        }
+        setComments(updatedComments)
+      } else {
+        // 新しいコメントを追加
+        setComments([
+          ...comments,
+          {
+            id: Date.now(), // 一時的なID
+            date: dateString,
+            time_slot: timeSlot,
+            class_group: group,
+            classroom,
+            comment,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ])
+      }
+
+      alert("コメントが保存されました。")
+    } catch (err) {
+      console.error("Failed to save comment:", err)
+      alert(err instanceof Error ? err.message : "コメントの保存に失敗しました。")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleCommentDelete = async (timeSlot: TimeSlot, group: string) => {
+    setIsLoading(true)
+    const dateString = format(selectedDate, "yyyy-MM-dd")
+    try {
+      const response = await fetch(
+        `/api/classroom-comments?date=${dateString}&time_slot=${timeSlot}&class_group=${group}`,
+        {
+          method: "DELETE",
+        },
+      )
+
+      if (!response.ok) {
+        throw new Error("コメントの削除に失敗しました。")
+      }
+
+      // コメントリストから削除
+      setComments(comments.filter((c) => !(c.time_slot === timeSlot && c.class_group === group)))
+
+      alert("コメントが削除されました。")
+    } catch (err) {
+      console.error("Failed to delete comment:", err)
+      alert(err instanceof Error ? err.message : "コメントの削除に失敗しました。")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleSave = async () => {
     if (dailyData) {
       setIsLoading(true)
@@ -120,6 +225,7 @@ export default function AdminPage() {
       } catch (err: any) {
         console.error("Failed to save assignments:", err)
         setError(`データの保存に失敗しました: ${err.message}`)
+        alert(`データの保存に失敗しました: ${err.message}`)
       } finally {
         setIsLoading(false)
       }
@@ -153,11 +259,11 @@ export default function AdminPage() {
     )
   }
 
-  if (isLoading) {
+  if (isLoading && !dailyData) {
     return <div className="container mx-auto py-8 text-center">データを読み込んでいます...</div>
   }
 
-  if (error) {
+  if (error && !dailyData) {
     return <div className="container mx-auto py-8 text-center text-red-500">エラー: {error}</div>
   }
 
@@ -187,7 +293,15 @@ export default function AdminPage() {
         </Button>
       </div>
 
-      <ClassroomTable data={dailyData} onCellChange={handleCellChange} isAdminView={true} />
+      <ClassroomTable
+        data={dailyData}
+        onCellChange={handleCellChange}
+        isAdminView={true}
+        comments={comments}
+        onCommentChange={handleCommentChange}
+        onCommentDelete={handleCommentDelete}
+        date={format(selectedDate, "yyyy-MM-dd")}
+      />
     </div>
   )
 }
