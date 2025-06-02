@@ -28,17 +28,25 @@ export default function AdminPage() {
     const checkAuth = async () => {
       try {
         const {
-          data: { user },
+          data: { session },
           error,
-        } = await supabase.auth.getUser()
-        if (error) throw error
-        setIsAuthenticated(!!user)
-        if (user) {
+        } = await supabase.auth.getSession()
+
+        if (error) {
+          console.error("Session check error:", error)
+          setIsAuthenticated(false)
+          return
+        }
+
+        if (session?.user) {
+          setIsAuthenticated(true)
           fetchData(selectedDate)
+        } else {
+          setIsAuthenticated(false)
         }
       } catch (err) {
         console.error("Authentication check failed:", err)
-        setError("認証チェックに失敗しました。")
+        setIsAuthenticated(false)
       }
     }
     checkAuth()
@@ -67,6 +75,9 @@ export default function AdminPage() {
       if (commentsResponse.ok) {
         const commentsData = await commentsResponse.json()
         setComments(commentsData)
+      } else {
+        console.warn("Failed to fetch comments, but continuing with empty comments")
+        setComments([])
       }
     } catch (err) {
       console.error("Failed to fetch assignments:", err)
@@ -82,8 +93,11 @@ export default function AdminPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
-      setIsAuthenticated(true)
-      fetchData(selectedDate)
+
+      if (data.session) {
+        setIsAuthenticated(true)
+        fetchData(selectedDate)
+      }
     } catch (err: any) {
       console.error("Authentication error:", err)
       setError(`認証に失敗しました: ${err.message}`)
@@ -94,7 +108,9 @@ export default function AdminPage() {
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date)
-    fetchData(date)
+    if (isAuthenticated) {
+      fetchData(date)
+    }
   }
 
   const handleCellChange = useCallback((timeSlot: string, group: string, classroom: ClassroomType | null) => {
@@ -144,7 +160,8 @@ export default function AdminPage() {
       })
 
       if (!response.ok) {
-        throw new Error("コメントの保存に失敗しました。")
+        const errorData = await response.json()
+        throw new Error(errorData.details || "コメントの保存に失敗しました。")
       }
 
       // コメントリストを更新
@@ -198,7 +215,8 @@ export default function AdminPage() {
       )
 
       if (!response.ok) {
-        throw new Error("コメントの削除に失敗しました。")
+        const errorData = await response.json()
+        throw new Error(errorData.details || "コメントの削除に失敗しました。")
       }
 
       // コメントリストから削除
