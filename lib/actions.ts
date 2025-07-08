@@ -25,7 +25,7 @@ export async function fetchClassroomData(date: string): Promise<DailyClassroomDa
       昼食: {},
       "3限目": {},
       "4限目": {},
-      "自　習": {},
+      "マイスタディ": {},
       "補　習": {},
       再試験: {},
     }
@@ -135,7 +135,7 @@ export async function autoAllocateClassrooms(date: string): Promise<DailyClassro
         "3限目": {},
         "4限目": {},
         昼食: {},
-        "自　習": {},
+        "マイスタディ": {},
         "補　習": {},
         再試験: {},
       }

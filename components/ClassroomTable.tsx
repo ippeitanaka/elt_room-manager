@@ -49,6 +49,7 @@ const classroomOptions: ClassroomType[] = [
   "パソコン室",
   "DT3階小教室",
   "DT4階小教室",
+  "図書室",
 ]
 
 const renderColumnDropdown = (
@@ -61,7 +62,7 @@ const renderColumnDropdown = (
     onValueChange={(value: ClassroomType | undefined) => {
       if (value) {
         timeSlots
-          .filter((slot) => !["自　習", "補　習", "再試験"].includes(slot)) // 昼食を除外対象から削除
+          .filter((slot) => !["マイスタディ", "補　習", "再試験"].includes(slot)) // 昼食を除外対象から削除
           .forEach((timeSlot) => onCellChange(timeSlot, group, value))
       }
     }}

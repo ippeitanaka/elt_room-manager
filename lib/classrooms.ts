@@ -13,8 +13,9 @@ export type ClassroomType =
   | "パソコン室"
   | "DT3階小教室"
   | "DT4階小教室"
+  | "図書室"
 
-export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "自　習" | "補　習" | "再試験"
+export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "マイスタディ" | "補　習" | "再試験"
 
 export interface DailyClassroomData {
   "1限目": Record<string, string | null>
@@ -22,7 +23,7 @@ export interface DailyClassroomData {
   昼食: Record<string, string | null>
   "3限目": Record<string, string | null>
   "4限目": Record<string, string | null>
-  "自　習": Record<string, string | null>
+  "マイスタディ": Record<string, string | null>
   "補　習": Record<string, string | null>
   再試験: Record<string, string | null>
 }
@@ -33,8 +34,8 @@ export type ClassroomData = {
 
 export const regularClassGroups = ["1-A", "1-B", "2-A", "2-B", "3-A", "3-B"]
 export const nursingClassGroups = ["1-N", "2-N", "3-N"]
-export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "自　習", "補　習", "再試験"]
-export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "自　習", "補　習", "再試験"]
+export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "マイスタディ", "補　習", "再試験"]
+export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "マイスタディ", "補　習", "再試験"]
 
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
@@ -65,7 +66,7 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
         昼食: {},
         "3限目": {},
         "4限目": {},
-        "自　習": {},
+        "マイスタディ": {},
         "補　習": {},
         再試験: {},
       }
@@ -79,7 +80,7 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
       昼食: {},
       "3限目": {},
       "4限目": {},
-      "自　習": {},
+      "マイスタディ": {},
       "補　習": {},
       再試験: {},
     }
