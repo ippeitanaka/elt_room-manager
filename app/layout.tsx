@@ -20,6 +20,18 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700&display=swap"
           rel="stylesheet"
         />
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-JPXBRWRFWR"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-JPXBRWRFWR');
+            `,
+          }}
+        />
       </head>
       <body className="font-m-plus-rounded-1c">{children}</body>
     </html>
