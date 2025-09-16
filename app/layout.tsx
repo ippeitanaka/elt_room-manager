@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
-  title: "教室割り当て",
+  title: "教室管理",
   description: "学生のための教室割り当て表示システム",
     generator: 'v0.dev'
 }
