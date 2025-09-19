@@ -196,19 +196,19 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className={`border border-pink-300 p-1 text-center ${getClassroomColor(classroom || "")} ${
+          className={`border border-pink-300 p-1 text-center min-w-[7rem] max-w-[7rem] ${getClassroomColor(classroom || "")} ${
             !isAdminView && hasComment ? "cursor-pointer" : ""
           }`}
           onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
         >
           {/* subject/instructor 表示（空欄・null時は非表示） */}
           {(subject || instructor) && (
-            <div className="flex flex-col items-center mb-1">
+            <div className="flex flex-col items-center mb-1 w-full">
               {subject && (
-                <span className="font-bold text-xs text-gray-900">{subject}</span>
+                <span className="font-bold text-xs md:text-sm text-gray-900 truncate w-full" title={subject}>{subject}</span>
               )}
               {instructor && (
-                <span className="text-[0.7em] text-gray-500 font-normal">{instructor}</span>
+                <span className="text-[0.7em] text-gray-500 font-normal truncate w-full" title={instructor}>{instructor}</span>
               )}
             </div>
           )}
@@ -278,9 +278,9 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap"
+                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
                     >
-                      <div>{group}</div>
+                      <div className="truncate text-xs md:text-sm">{group}</div>
                       {isAdminView && renderColumnDropdown(group, onCellChange, regularTimeSlots)}
                     </TableHead>
                   ))}
@@ -312,9 +312,9 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                   {nursingClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap"
+                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
                     >
-                      <div>{group}</div>
+                      <div className="truncate text-xs md:text-sm">{group}</div>
                       {isAdminView && renderColumnDropdown(group, onCellChange, nursingTimeSlots)}
                     </TableHead>
                   ))}
