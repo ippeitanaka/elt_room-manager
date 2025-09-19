@@ -61,9 +61,7 @@ const renderColumnDropdown = (
     value={undefined}
     onValueChange={(value: string) => {
       if (value) {
-        timeSlots
-          .filter((slot) => !["マイスタディ", "補　習", "再試験"].includes(slot))
-          .forEach((timeSlot) => onCellChange(timeSlot, group, value as ClassroomType))
+        timeSlots.forEach((timeSlot) => onCellChange(timeSlot, group, value as ClassroomType))
       }
     }}
   >
