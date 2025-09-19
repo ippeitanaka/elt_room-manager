@@ -52,32 +52,6 @@ const classroomOptions: ClassroomType[] = [
   "図書室",
 ]
 
-const renderColumnDropdown = (
-  group: string,
-  onCellChange: (timeSlot: TimeSlot, group: string, classroom: ClassroomType | null) => void,
-  timeSlots: TimeSlot[],
-) => (
-  <Select
-    value={undefined}
-    onValueChange={(value: string) => {
-      if (value) {
-        timeSlots.forEach((timeSlot) => onCellChange(timeSlot, group, value as ClassroomType))
-      }
-    }}
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue placeholder="一括設定" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="---">---</SelectItem>
-      {classroomOptions.map((option) => (
-        <SelectItem key={option} value={option}>
-          {option}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-)
 
 export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
   ({ data, onCellChange, isAdminView, comments = [], onCommentChange, onCommentDelete, date }) => {
@@ -279,7 +253,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                       className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
                     >
                       <div className="truncate text-xs md:text-sm">{group}</div>
-                      {isAdminView && renderColumnDropdown(group, onCellChange, regularTimeSlots)}
+                      {/* 一括設定機能は削除 */}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -313,7 +287,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                       className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
                     >
                       <div className="truncate text-xs md:text-sm">{group}</div>
-                      {isAdminView && renderColumnDropdown(group, onCellChange, nursingTimeSlots)}
+                      {/* 一括設定機能は削除 */}
                     </TableHead>
                   ))}
                 </TableRow>
