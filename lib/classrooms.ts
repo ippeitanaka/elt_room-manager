@@ -42,8 +42,8 @@ export type ClassroomData = {
 
 export const regularClassGroups = ["1-A", "1-B", "2-A", "2-B", "3-A", "3-B"]
 export const nursingClassGroups = ["1-N", "2-N", "3-N"]
-export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "マイスタディ", "補　習", "再試験"]
-export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "マイスタディ", "補　習", "再試験"]
+export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "マイスタディ", "補　習", "再試験"]
+export const nursingTimeSlots: TimeSlot[] = ["5限目", "6限目", "マイスタディ", "補　習", "再試験"]
 
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
