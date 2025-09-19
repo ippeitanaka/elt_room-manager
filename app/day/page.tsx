@@ -1,3 +1,5 @@
+console.log("items", items)
+
 
 "use client"
 export const dynamic = "force-dynamic"
@@ -23,6 +25,7 @@ function getQueryDate(): string | undefined {
 
 export default function DayPage() {
   const [items, setItems] = useState<DayScheduleItem[]>([])
+  console.log("items", items)
   const [date, setDate] = useState<string>("")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>("")
