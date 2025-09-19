@@ -114,7 +114,7 @@ left join classroom_assignments ca
  and ca.time_slot = cur.time_slot
  and ca.class_group = cur.class_group
 left join classroom_comments cc
-  on cc.date = cur.date
+  on cc.date::date = cur.date
  and cc.time_slot = cur.time_slot
  and cc.class_group = cur.class_group
 where cur.class_group is not null;
