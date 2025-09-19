@@ -1,6 +1,6 @@
--- 依存するビューを削除
-DROP VIEW IF EXISTS classroom_assignments_rows;
-DROP VIEW IF EXISTS view_day_schedule;
+-- 依存するビューを削除（依存関係の順序に注意）
+DROP VIEW IF EXISTS view_day_schedule CASCADE;
+DROP VIEW IF EXISTS classroom_assignments_rows CASCADE;
 
 -- time_slot列のデータ型を修正（必要な場合）
 ALTER TABLE classroom_assignments
