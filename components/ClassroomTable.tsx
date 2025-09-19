@@ -154,11 +154,15 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
 
     const renderCell = (timeSlot: TimeSlot, group: string) => {
       const classroom = data[timeSlot]?.[group] || null
-      const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot) // 昼食を特別な時間枠から除外
+      const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot)
       const comment = findComment(timeSlot, group)
       const hasComment = !!comment
 
-      // 編集中のコメント
+      // subject/instructor取得（API統合後はpropsで渡す形に拡張可）
+      // ここでは仮にdata[timeSlot]?.[group + "_subject"]等で受け取る想定
+      const subject = data[timeSlot]?.[group + "_subject"] || ""
+      const instructor = data[timeSlot]?.[group + "_instructor"] || ""
+
       if (isAdminView && editingComment && editingComment.timeSlot === timeSlot && editingComment.group === group) {
         return (
           <TableCell
@@ -199,6 +203,15 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
           }`}
           onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
         >
+          {/* subject/instructor 表示 */}
+          <div className="flex flex-col items-center mb-1">
+            <span className={`font-bold text-xs ${!subject ? "text-gray-400 font-normal" : "text-gray-900"}`}>
+              {subject || "講義未設定"}
+            </span>
+            <span className={`text-[0.7em] ${!instructor ? "text-gray-300" : "text-gray-500"} font-normal`}> 
+              {instructor || (!subject ? "" : "講義未設定")}
+            </span>
+          </div>
           {isAdminView ? (
             <div className="space-y-1">
               <Select
