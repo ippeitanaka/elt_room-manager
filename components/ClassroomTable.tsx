@@ -59,11 +59,11 @@ const renderColumnDropdown = (
 ) => (
   <Select
     value={undefined}
-    onValueChange={(value: ClassroomType | undefined) => {
+    onValueChange={(value: string) => {
       if (value) {
         timeSlots
-          .filter((slot) => !["マイスタディ", "補　習", "再試験"].includes(slot)) // 昼食を除外対象から削除
-          .forEach((timeSlot) => onCellChange(timeSlot, group, value))
+          .filter((slot) => !["マイスタディ", "補　習", "再試験"].includes(slot))
+          .forEach((timeSlot) => onCellChange(timeSlot, group, value as ClassroomType))
       }
     }}
   >
@@ -134,7 +134,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         onCommentChange(
           editingComment.timeSlot,
           editingComment.group,
-          data[editingComment.timeSlot][editingComment.group] || "",
+          data[editingComment.timeSlot][editingComment.group]?.classroom || "",
           editingComment.comment,
         )
         setEditingComment(null)
@@ -153,15 +153,13 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
     }
 
     const renderCell = (timeSlot: TimeSlot, group: string) => {
-      const classroom = data[timeSlot]?.[group] || null
-      const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot)
-      const comment = findComment(timeSlot, group)
-      const hasComment = !!comment
-
-      // subject/instructor取得（API統合後はpropsで渡す形に拡張可）
-      // ここでは仮にdata[timeSlot]?.[group + "_subject"]等で受け取る想定
-      const subject = data[timeSlot]?.[group + "_subject"] || ""
-      const instructor = data[timeSlot]?.[group + "_instructor"] || ""
+  const cell = data[timeSlot]?.[group] || { classroom: null }
+  const classroom = cell.classroom || null
+  const subject = cell.subject || ""
+  const instructor = cell.instructor || ""
+  const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot)
+  const comment = findComment(timeSlot, group)
+  const hasComment = !!comment
 
       if (isAdminView && editingComment && editingComment.timeSlot === timeSlot && editingComment.group === group) {
         return (
@@ -203,20 +201,22 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
           }`}
           onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
         >
-          {/* subject/instructor 表示 */}
-          <div className="flex flex-col items-center mb-1">
-            <span className={`font-bold text-xs ${!subject ? "text-gray-400 font-normal" : "text-gray-900"}`}>
-              {subject || "講義未設定"}
-            </span>
-            <span className={`text-[0.7em] ${!instructor ? "text-gray-300" : "text-gray-500"} font-normal`}> 
-              {instructor || (!subject ? "" : "講義未設定")}
-            </span>
-          </div>
+          {/* subject/instructor 表示（空欄・null時は非表示） */}
+          {(subject || instructor) && (
+            <div className="flex flex-col items-center mb-1">
+              {subject && (
+                <span className="font-bold text-xs text-gray-900">{subject}</span>
+              )}
+              {instructor && (
+                <span className="text-[0.7em] text-gray-500 font-normal">{instructor}</span>
+              )}
+            </div>
+          )}
           {isAdminView ? (
             <div className="space-y-1">
               <Select
                 value={classroom || undefined}
-                onValueChange={(value: ClassroomType | undefined) => onCellChange(timeSlot, group, value || null)}
+                onValueChange={(value: string) => onCellChange(timeSlot, group, value as ClassroomType || null)}
                 disabled={!isSpecialTimeSlot && !isAdminView}
               >
                 <SelectTrigger className="w-full">

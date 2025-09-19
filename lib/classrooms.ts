@@ -17,15 +17,21 @@ export type ClassroomType =
 
 export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "マイスタディ" | "補　習" | "再試験"
 
+export interface DailyClassroomDataCell {
+  classroom: string | null
+  subject?: string | null
+  instructor?: string | null
+}
+
 export interface DailyClassroomData {
-  "1限目": Record<string, string | null>
-  "2限目": Record<string, string | null>
-  昼食: Record<string, string | null>
-  "3限目": Record<string, string | null>
-  "4限目": Record<string, string | null>
-  "マイスタディ": Record<string, string | null>
-  "補　習": Record<string, string | null>
-  再試験: Record<string, string | null>
+  "1限目": Record<string, DailyClassroomDataCell>
+  "2限目": Record<string, DailyClassroomDataCell>
+  昼食: Record<string, DailyClassroomDataCell>
+  "3限目": Record<string, DailyClassroomDataCell>
+  "4限目": Record<string, DailyClassroomDataCell>
+  "マイスタディ": Record<string, DailyClassroomDataCell>
+  "補　習": Record<string, DailyClassroomDataCell>
+  再試験: Record<string, DailyClassroomDataCell>
 }
 
 export type ClassroomData = {
@@ -46,9 +52,10 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
     }
 
     const formattedDate = format(parsedDate, "yyyy-MM-dd")
+    // view_day_scheduleからclassroom/subject/instructorを取得
     const { data, error } = await supabase
-      .from("classroom_assignments")
-      .select("*")
+      .from("view_day_schedule")
+      .select("time_slot, class_group, classroom, subject, instructor")
       .eq("date", formattedDate)
       .order("time_slot", { ascending: true })
       .order("class_group", { ascending: true })
@@ -74,6 +81,7 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
 
     console.log("Received data:", data)
 
+
     const dailyData: DailyClassroomData = {
       "1限目": {},
       "2限目": {},
@@ -88,12 +96,16 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
     data.forEach((item) => {
       if (item.time_slot && item.class_group) {
         if (item.time_slot in dailyData) {
-          dailyData[item.time_slot as TimeSlot][item.class_group] = item.classroom || null
+          dailyData[item.time_slot as TimeSlot][item.class_group] = {
+            classroom: item.classroom || null,
+            subject: item.subject ?? null,
+            instructor: item.instructor ?? null,
+          }
         } else {
           console.warn(`Unexpected time slot: ${item.time_slot}`)
         }
       } else {
-        console.warn("Invalid item in classroom_assignments:", item)
+        console.warn("Invalid item in view_day_schedule:", item)
       }
     })
 
