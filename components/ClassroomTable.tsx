@@ -269,7 +269,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         {/* 通常クラス用テーブル */}
         <div className="w-full overflow-x-auto mb-8">
           <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
+            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm bg-gray-50">
               <TableHeader>
                 <TableRow>
                   <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
@@ -303,7 +303,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         {/* 看護クラス用テーブル */}
         <div className="w-full overflow-x-auto">
           <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
+            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm bg-gray-50">
               <TableHeader>
                 <TableRow>
                   <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
