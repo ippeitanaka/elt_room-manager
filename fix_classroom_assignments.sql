@@ -124,11 +124,7 @@ left join classroom_comments cc
   on cc.date::date = cur.date
  and cc.time_slot = cur.time_slot
  and cc.class_group = cur.class_group
-where cur.class_group is not null
-  and (
-    (cur.class_group in ('1-A', '1-B', '2-A', '2-B', '3-A', '3-B') and cur.time_slot not in ('5限目','6限目')) or
-    (cur.class_group in ('1-N', '2-N', '3-N') and cur.time_slot not in ('1限目','2限目','昼食','3限目','4限目'))
-  );
+where cur.class_group is not null;
 
 -- デバッグ: ビューが正しく作成されたか確認
 SELECT 'view_day_schedule created successfully' as status, count(*) as record_count FROM view_day_schedule;
