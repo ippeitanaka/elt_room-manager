@@ -128,12 +128,15 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
 
   for (const [timeSlot, groups] of Object.entries(data)) {
     for (const [classGroup, cell] of Object.entries(groups) as [string, DailyClassroomDataCell][]) {
-      assignments.push({
-        date,
-        time_slot: timeSlot,
-        class_group: classGroup,
-        classroom: cell.classroom,
-      })
+      // classroomがnullまたは空文字の場合はinsertしない
+      if (cell.classroom && cell.classroom.trim() !== "") {
+        assignments.push({
+          date,
+          time_slot: timeSlot,
+          class_group: classGroup,
+          classroom: cell.classroom,
+        })
+      }
     }
   }
 
@@ -148,15 +151,19 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
       throw new Error(`Failed to delete existing classroom data: ${deleteError.message}`)
     }
 
-    // Step 2: Insert new data
-    const { data: savedData, error: insertError } = await supabase.from("classroom_assignments").insert(assignments)
-
-    if (insertError) {
-      console.error("Error saving new classroom data:", insertError)
-      throw new Error(`Failed to save new classroom data: ${insertError.message}`)
+    // Step 2: Insert new data (空でなければ)
+    let savedData = null
+    if (assignments.length > 0) {
+      const insertResult = await supabase.from("classroom_assignments").insert(assignments)
+      savedData = insertResult.data
+      if (insertResult.error) {
+        console.error("Error saving new classroom data:", insertResult.error)
+        throw new Error(`Failed to save new classroom data: ${insertResult.error.message}`)
+      }
+      console.log("Saved data:", savedData)
+    } else {
+      console.log("No assignments to save (all cells empty)")
     }
-
-    console.log("Saved data:", savedData)
     return savedData
   } catch (error) {
     console.error("Unexpected error in saveClassroomData:", error)
