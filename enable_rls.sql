@@ -13,7 +13,7 @@ DROP POLICY IF EXISTS "Enable update for authenticated users only" ON classroom_
 DROP POLICY IF EXISTS "Enable delete for authenticated users only" ON classroom_assignments;
 
 -- ポリシーを設定（例: 全てのユーザーに読み取り許可、認証済みユーザーに書き込み許可）
-CREATE POLICY "Enable read access for all users" ON classroom_assignments FOR SELECT USING (auth.role() = 'authenticated' OR auth.role() = 'anon');
+CREATE POLICY "Enable read access for all users" ON classroom_assignments FOR SELECT USING (true);
 CREATE POLICY "Enable insert for authenticated users only" ON classroom_assignments FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Enable update for authenticated users only" ON classroom_assignments FOR UPDATE USING (auth.role() = 'authenticated');
 CREATE POLICY "Enable delete for authenticated users only" ON classroom_assignments FOR DELETE USING (auth.role() = 'authenticated');
