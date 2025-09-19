@@ -10,6 +10,13 @@ ALTER COLUMN time_slot TYPE VARCHAR(20);
 ALTER TABLE classroom_assignments
 ALTER COLUMN classroom TYPE VARCHAR(100);
 
+-- プライマリキーを設定（upsertのonConflict用）
+ALTER TABLE classroom_assignments
+DROP CONSTRAINT IF EXISTS classroom_assignments_pkey;
+
+ALTER TABLE classroom_assignments
+ADD PRIMARY KEY (date, time_slot, class_group);
+
 -- 制約を再設定（必要な場合）
 ALTER TABLE classroom_assignments
 DROP CONSTRAINT IF EXISTS classroom_assignments_time_slot_check;
