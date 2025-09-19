@@ -58,7 +58,6 @@ export default function Home() {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <pre style={{ fontSize: "10px", color: "red" }}>{JSON.stringify(items, null, 2)}</pre>
       <h1 className="text-xl font-bold mb-4 text-pink-700">本日の教室割当</h1>
       <div className="mb-2 text-sm text-gray-500">{date}</div>
       {loading ? (
