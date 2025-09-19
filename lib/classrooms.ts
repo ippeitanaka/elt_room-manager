@@ -127,12 +127,12 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
   const assignments = []
 
   for (const [timeSlot, groups] of Object.entries(data)) {
-    for (const [classGroup, classroom] of Object.entries(groups)) {
+    for (const [classGroup, cell] of Object.entries(groups) as [string, DailyClassroomDataCell][]) {
       assignments.push({
         date,
         time_slot: timeSlot,
         class_group: classGroup,
-        classroom,
+        classroom: cell.classroom,
       })
     }
   }

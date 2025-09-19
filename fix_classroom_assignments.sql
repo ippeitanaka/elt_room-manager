@@ -2,6 +2,10 @@
 ALTER TABLE classroom_assignments
 ALTER COLUMN time_slot TYPE VARCHAR(20);
 
+-- classroom列のデータ型を拡張（念のため）
+ALTER TABLE classroom_assignments
+ALTER COLUMN classroom TYPE VARCHAR(100);
+
 -- 制約を再設定（必要な場合）
 ALTER TABLE classroom_assignments
 DROP CONSTRAINT IF EXISTS classroom_assignments_time_slot_check;
