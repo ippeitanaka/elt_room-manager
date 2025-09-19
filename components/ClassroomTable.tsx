@@ -49,9 +49,36 @@ const classroomOptions: ClassroomType[] = [
   "パソコン室",
   "DT3階小教室",
   "DT4階小教室",
-  "図書室",
 ]
 
+const renderColumnDropdown = (
+  group: string,
+  onCellChange: (timeSlot: TimeSlot, group: string, classroom: ClassroomType | null) => void,
+  timeSlots: TimeSlot[],
+) => (
+  <Select
+    value={undefined}
+    onValueChange={(value: ClassroomType | undefined) => {
+      if (value) {
+        timeSlots
+          .filter((slot) => !["自　習", "補　習", "再試験"].includes(slot)) // 昼食を除外対象から削除
+          .forEach((timeSlot) => onCellChange(timeSlot, group, value))
+      }
+    }}
+  >
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="一括設定" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="---">---</SelectItem>
+      {classroomOptions.map((option) => (
+        <SelectItem key={option} value={option}>
+          {option}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+)
 
 export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
   ({ data, onCellChange, isAdminView, comments = [], onCommentChange, onCommentDelete, date }) => {
@@ -106,7 +133,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         onCommentChange(
           editingComment.timeSlot,
           editingComment.group,
-          data[editingComment.timeSlot][editingComment.group]?.classroom || "",
+          data[editingComment.timeSlot][editingComment.group] || "",
           editingComment.comment,
         )
         setEditingComment(null)
@@ -125,14 +152,12 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
     }
 
     const renderCell = (timeSlot: TimeSlot, group: string) => {
-  const cell = data[timeSlot]?.[group] || { classroom: null }
-  const classroom = cell.classroom || null
-  const subject = cell.subject || ""
-  const instructor = cell.instructor || ""
-  const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot)
-  const comment = findComment(timeSlot, group)
-  const hasComment = !!comment
+      const classroom = data[timeSlot]?.[group] || null
+      const isSpecialTimeSlot = ["自　習", "補　習", "再試験"].includes(timeSlot) // 昼食を特別な時間枠から除外
+      const comment = findComment(timeSlot, group)
+      const hasComment = !!comment
 
+      // 編集中のコメント
       if (isAdminView && editingComment && editingComment.timeSlot === timeSlot && editingComment.group === group) {
         return (
           <TableCell
@@ -168,27 +193,16 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className={`border border-pink-300 p-1 text-center min-w-[7rem] max-w-[7rem] ${getClassroomColor(classroom || "")} ${
+          className={`border border-pink-300 p-1 text-center ${getClassroomColor(classroom || "")} ${
             !isAdminView && hasComment ? "cursor-pointer" : ""
           }`}
           onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
         >
-          {/* subject/instructor 表示（空欄・null時は非表示） */}
-          {(subject || instructor) && (
-            <div className="flex flex-col items-center mb-1 w-full">
-              {subject && (
-                <span className="font-bold text-xs md:text-sm text-gray-900 truncate w-full" title={subject}>{subject}</span>
-              )}
-              {instructor && (
-                <span className="text-[0.7em] text-gray-500 font-normal truncate w-full" title={instructor}>{instructor}</span>
-              )}
-            </div>
-          )}
           {isAdminView ? (
             <div className="space-y-1">
               <Select
                 value={classroom || undefined}
-                onValueChange={(value: string) => onCellChange(timeSlot, group, value as ClassroomType || null)}
+                onValueChange={(value: ClassroomType | undefined) => onCellChange(timeSlot, group, value || null)}
                 disabled={!isSpecialTimeSlot && !isAdminView}
               >
                 <SelectTrigger className="w-full">
@@ -241,7 +255,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         {/* 通常クラス用テーブル */}
         <div className="w-full overflow-x-auto mb-8">
           <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm bg-gray-50">
+            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
               <TableHeader>
                 <TableRow>
                   <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
@@ -250,10 +264,10 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
+                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap"
                     >
-                      <div className="truncate text-xs md:text-sm">{group}</div>
-                      {/* 一括設定機能は削除 */}
+                      <div>{group}</div>
+                      {isAdminView && renderColumnDropdown(group, onCellChange, regularTimeSlots)}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -275,7 +289,7 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
         {/* 看護クラス用テーブル */}
         <div className="w-full overflow-x-auto">
           <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm bg-gray-50">
+            <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
               <TableHeader>
                 <TableRow>
                   <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
@@ -284,10 +298,10 @@ export const ClassroomTable: React.FC<ClassroomTableProps> = React.memo(
                   {nursingClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[7rem] max-w-[7rem]"
+                      className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap"
                     >
-                      <div className="truncate text-xs md:text-sm">{group}</div>
-                      {/* 一括設定機能は削除 */}
+                      <div>{group}</div>
+                      {isAdminView && renderColumnDropdown(group, onCellChange, nursingTimeSlots)}
                     </TableHead>
                   ))}
                 </TableRow>

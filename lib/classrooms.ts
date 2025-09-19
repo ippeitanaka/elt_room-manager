@@ -13,27 +13,18 @@ export type ClassroomType =
   | "パソコン室"
   | "DT3階小教室"
   | "DT4階小教室"
-  | "図書室"
 
-export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "5限目" | "6限目" | "マイスタディ" | "補　習" | "再試験"
-
-export interface DailyClassroomDataCell {
-  classroom: string | null
-  subject?: string | null
-  instructor?: string | null
-}
+export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "自　習" | "補　習" | "再試験"
 
 export interface DailyClassroomData {
-  "1限目": Record<string, DailyClassroomDataCell>
-  "2限目": Record<string, DailyClassroomDataCell>
-  昼食: Record<string, DailyClassroomDataCell>
-  "3限目": Record<string, DailyClassroomDataCell>
-  "4限目": Record<string, DailyClassroomDataCell>
-  "5限目": Record<string, DailyClassroomDataCell>
-  "6限目": Record<string, DailyClassroomDataCell>
-  "マイスタディ": Record<string, DailyClassroomDataCell>
-  "補　習": Record<string, DailyClassroomDataCell>
-  再試験: Record<string, DailyClassroomDataCell>
+  "1限目": Record<string, string | null>
+  "2限目": Record<string, string | null>
+  昼食: Record<string, string | null>
+  "3限目": Record<string, string | null>
+  "4限目": Record<string, string | null>
+  "自　習": Record<string, string | null>
+  "補　習": Record<string, string | null>
+  再試験: Record<string, string | null>
 }
 
 export type ClassroomData = {
@@ -42,8 +33,8 @@ export type ClassroomData = {
 
 export const regularClassGroups = ["1-A", "1-B", "2-A", "2-B", "3-A", "3-B"]
 export const nursingClassGroups = ["1-N", "2-N", "3-N"]
-export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "マイスタディ", "補　習", "再試験"]
-export const nursingTimeSlots: TimeSlot[] = ["5限目", "6限目", "マイスタディ", "補　習", "再試験"]
+export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "自　習", "補　習", "再試験"]
+export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "自　習", "補　習", "再試験"]
 
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
@@ -54,10 +45,9 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
     }
 
     const formattedDate = format(parsedDate, "yyyy-MM-dd")
-    // view_day_scheduleからclassroom/subject/instructorを取得
     const { data, error } = await supabase
-      .from("view_day_schedule")
-      .select("time_slot, class_group, classroom, subject, instructor")
+      .from("classroom_assignments")
+      .select("*")
       .eq("date", formattedDate)
       .order("time_slot", { ascending: true })
       .order("class_group", { ascending: true })
@@ -75,9 +65,7 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
         昼食: {},
         "3限目": {},
         "4限目": {},
-        "5限目": {},
-        "6限目": {},
-        "マイスタディ": {},
+        "自　習": {},
         "補　習": {},
         再試験: {},
       }
@@ -85,16 +73,13 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
 
     console.log("Received data:", data)
 
-
     const dailyData: DailyClassroomData = {
       "1限目": {},
       "2限目": {},
       昼食: {},
       "3限目": {},
       "4限目": {},
-      "5限目": {},
-      "6限目": {},
-      "マイスタディ": {},
+      "自　習": {},
       "補　習": {},
       再試験: {},
     }
@@ -102,16 +87,12 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
     data.forEach((item) => {
       if (item.time_slot && item.class_group) {
         if (item.time_slot in dailyData) {
-          dailyData[item.time_slot as TimeSlot][item.class_group] = {
-            classroom: item.classroom || null,
-            subject: item.subject ?? null,
-            instructor: item.instructor ?? null,
-          }
+          dailyData[item.time_slot as TimeSlot][item.class_group] = item.classroom || null
         } else {
           console.warn(`Unexpected time slot: ${item.time_slot}`)
         }
       } else {
-        console.warn("Invalid item in view_day_schedule:", item)
+        console.warn("Invalid item in classroom_assignments:", item)
       }
     })
 
@@ -127,16 +108,13 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
   const assignments = []
 
   for (const [timeSlot, groups] of Object.entries(data)) {
-    for (const [classGroup, cell] of Object.entries(groups) as [string, DailyClassroomDataCell][]) {
-      // classroomがnullまたは空文字の場合はinsertしない
-      if (cell.classroom && cell.classroom.trim() !== "") {
-        assignments.push({
-          date,
-          time_slot: timeSlot,
-          class_group: classGroup,
-          classroom: cell.classroom,
-        })
-      }
+    for (const [classGroup, classroom] of Object.entries(groups)) {
+      assignments.push({
+        date,
+        time_slot: timeSlot,
+        class_group: classGroup,
+        classroom,
+      })
     }
   }
 
@@ -151,19 +129,15 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
       throw new Error(`Failed to delete existing classroom data: ${deleteError.message}`)
     }
 
-    // Step 2: Insert new data (空でなければ)
-    let savedData = null
-    if (assignments.length > 0) {
-      const insertResult = await supabase.from("classroom_assignments").insert(assignments)
-      savedData = insertResult.data
-      if (insertResult.error) {
-        console.error("Error saving new classroom data:", insertResult.error)
-        throw new Error(`Failed to save new classroom data: ${insertResult.error.message}`)
-      }
-      console.log("Saved data:", savedData)
-    } else {
-      console.log("No assignments to save (all cells empty)")
+    // Step 2: Insert new data
+    const { data: savedData, error: insertError } = await supabase.from("classroom_assignments").insert(assignments)
+
+    if (insertError) {
+      console.error("Error saving new classroom data:", insertError)
+      throw new Error(`Failed to save new classroom data: ${insertError.message}`)
     }
+
+    console.log("Saved data:", savedData)
     return savedData
   } catch (error) {
     console.error("Unexpected error in saveClassroomData:", error)

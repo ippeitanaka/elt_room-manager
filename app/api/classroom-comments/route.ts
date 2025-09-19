@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase-server"
+import { supabase } from "@/lib/supabase"
 
 // コメントを取得するAPI
 export async function GET(request: Request) {
@@ -11,14 +11,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabaseServer.from("classroom_comments").select("*").eq("date", date)
+    const { data, error } = await supabase.from("classroom_comments").select("*").eq("date", date)
 
     if (error) {
-      console.error("Error fetching classroom comments:", error)
       throw error
     }
 
-    return NextResponse.json(data || [])
+    return NextResponse.json(data)
   } catch (error) {
     console.error("Error fetching classroom comments:", error)
     return NextResponse.json(
@@ -42,7 +41,7 @@ export async function POST(request: Request) {
     }
 
     // 既存のコメントを確認
-    const { data: existingComment, error: fetchError } = await supabaseServer
+    const { data: existingComment, error: fetchError } = await supabase
       .from("classroom_comments")
       .select("id")
       .eq("date", date)
@@ -52,20 +51,19 @@ export async function POST(request: Request) {
 
     if (fetchError && fetchError.code !== "PGRST116") {
       // PGRST116はデータが見つからない場合のエラーコード
-      console.error("Error checking existing comment:", fetchError)
       throw fetchError
     }
 
     let result
     if (existingComment) {
       // 既存のコメントを更新
-      result = await supabaseServer
+      result = await supabase
         .from("classroom_comments")
         .update({ comment, classroom, updated_at: new Date().toISOString() })
         .eq("id", existingComment.id)
     } else {
       // 新しいコメントを作成
-      result = await supabaseServer.from("classroom_comments").insert([
+      result = await supabase.from("classroom_comments").insert([
         {
           date,
           time_slot,
@@ -77,7 +75,6 @@ export async function POST(request: Request) {
     }
 
     if (result.error) {
-      console.error("Error saving classroom comment:", result.error)
       throw result.error
     }
 
@@ -103,7 +100,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const { error } = await supabaseServer
+    const { error } = await supabase
       .from("classroom_comments")
       .delete()
       .eq("date", date)
@@ -111,7 +108,6 @@ export async function DELETE(request: Request) {
       .eq("class_group", class_group)
 
     if (error) {
-      console.error("Error deleting classroom comment:", error)
       throw error
     }
 
