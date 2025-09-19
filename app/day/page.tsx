@@ -68,10 +68,10 @@ export default function DayPage() {
                 {grouped[classGroup].sort((a, b) => (a.period_num ?? 0) - (b.period_num ?? 0)).map((item, idx) => (
                   <div key={idx} className="border rounded-lg p-3 bg-white shadow-sm">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={`font-semibold text-xs ${!item.subject ? "text-gray-400" : "text-gray-900"}`}>
-                        {item.subject || "講義未設定"}
+                      <span className={`font-semibold text-xs ${!item.subject?.trim() ? "text-gray-400" : "text-gray-900"}`}>
+                        {item.subject?.trim() ? item.subject : "講義未設定"}
                       </span>
-                      {item.instructor && (
+                      {item.instructor?.trim() && (
                         <span className="text-xs text-gray-500 ml-2">{item.instructor}</span>
                       )}
                     </div>
