@@ -26,16 +26,8 @@ DELETE FROM classroom_assignments
 WHERE time_slot NOT IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', 'マイスタディ', '補　習', '再試験');
 
 -- ビューを再作成
--- classroom_assignments_rows ビューが存在する場合のみ再作成
-DO $$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.views WHERE table_name = 'classroom_assignments_rows') THEN
-        -- 既存のビュー定義を維持（変更なし）
-        RAISE NOTICE 'classroom_assignments_rows view already exists';
-    END IF;
-END $$;
-
--- view_day_schedule を再作成
+-- view_day_schedule を再作成（確実に置き換え）
+drop view if exists view_day_schedule cascade;
 create or replace view view_day_schedule as
 with cur as (
   select
@@ -118,11 +110,20 @@ select
   cc.comment
 from cur
 left join classroom_assignments ca
-  on ca.date::date = cur.date
+  on ca.date = cur.date
  and ca.time_slot = cur.time_slot
  and ca.class_group = cur.class_group
 left join classroom_comments cc
-  on cc.date::date = cur.date
+  on cc.date = cur.date
  and cc.time_slot = cur.time_slot
  and cc.class_group = cur.class_group
 where cur.class_group is not null;
+
+-- デバッグ: ビューが正しく作成されたか確認
+SELECT 'view_day_schedule created successfully' as status, count(*) as record_count FROM view_day_schedule;
+
+-- デバッグ: 最新のデータを確認
+SELECT * FROM view_day_schedule
+WHERE date = CURRENT_DATE
+ORDER BY class_group, time_slot
+LIMIT 20;
