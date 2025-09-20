@@ -26,9 +26,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
     table: "w-full table-fixed border-collapse",
-  // hide the weekday header because its alignment was misbehaving
-  head_row: "hidden",
-  head_cell: "hidden",
+    head_row: "table-row bg-pink-100",
+    head_cell: "table-cell text-center align-middle font-bold text-pink-700 text-xs sm:text-base py-2 px-0 m-0 w-[14.2857%]",
     row: "table-row",
     cell: "table-cell h-9 align-middle text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
@@ -46,8 +45,6 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
-        Weekday: () => null,
-        Weekdays: () => null,
       } as any}
       {...props}
     />
