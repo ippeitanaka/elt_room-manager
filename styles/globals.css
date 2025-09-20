@@ -91,8 +91,6 @@
   }
 }
 
-/* Force-hide react-day-picker weekday header elements to avoid visual misalignment */
-.rdp-head, .rdp-headrow, .rdp-weekdays, .rdp-weekday, .rdp-caption, .react-day-picker__weekdays {
-  display: none !important;
-}
+/* previously forced hiding of DayPicker header removed; header is handled by component classNames */
+
 
