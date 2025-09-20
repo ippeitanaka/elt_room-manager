@@ -90,3 +90,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Force-hide react-day-picker weekday header elements to avoid visual misalignment */
+.rdp-head, .rdp-headrow, .rdp-weekdays, .rdp-weekday, .rdp-caption, .react-day-picker__weekdays {
+  display: none !important;
+}
+
