@@ -2,6 +2,7 @@
 
 import type * as React from "react"
 import { DayPicker } from "react-day-picker"
+import { isJpHoliday } from "@/lib/jp-holidays"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
@@ -26,11 +27,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
     table: "w-full table-fixed border-collapse",
-    head_row: "table-row bg-pink-100",
-    head_cell: "table-cell text-center align-middle font-bold text-pink-700 text-xs sm:text-base py-2 px-0 m-0 w-[14.2857%]",
+  head_row: "hidden",
+  head_cell: "hidden",
     row: "table-row",
     cell: "table-cell h-9 align-middle text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
+    day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
         day_range_end: "day-range-end",
         day_selected:
           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
@@ -45,6 +46,14 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        DayContent: ({ date, children }: { date: any; children: any }) => {
+          const w = date.getDay();
+          const isHoliday = isJpHoliday(date);
+          let color = "";
+          if (w === 0 || isHoliday) color = "text-red-600";
+          else if (w === 6) color = "text-blue-600";
+          return <span className={color}>{children}</span>;
+        },
       } as any}
       {...props}
     />
