@@ -233,7 +233,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       <div className="w-full overflow-x-auto mb-8">
         <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
           <div className="bg-pink-100 text-pink-800 font-bold text-center py-2">昼間部</div>
-          <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
+          <Table className="w-full border-collapse table-fixed text-[0.6rem] sm:text-xs md:text-sm">
             <TableHeader>
               <TableRow>
                 <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
@@ -242,9 +242,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 {regularClassGroups.map((group) => (
                   <TableHead
                     key={group}
-                    className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[80px]"
+                    className="border border-pink-300 bg-pink-100 p-1 text-center font-bold min-w-0 w-1/6 overflow-hidden"
                   >
-                    <div>{group}</div>
+                    <div className="truncate">{group}</div>
                   </TableHead>
                 ))}
               </TableRow>
@@ -257,7 +257,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   <TableCell className="border border-pink-300 bg-pink-50 p-1 text-center font-medium whitespace-nowrap">
                     {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
                   </TableCell>
-                  {regularClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
+                  {regularClassGroups.map((group) => (
+                    <React.Fragment key={group}>{renderCell(timeSlot as TimeSlot, group)}</React.Fragment>
+                  ))}
                 </TableRow>
               ))}
             </TableBody>
@@ -269,7 +271,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       <div className="w-full overflow-x-auto">
         <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
           <div className="bg-pink-100 text-pink-800 font-bold text-center py-2">夜間部</div>
-          <Table className="w-full border-collapse text-[0.6rem] sm:text-xs md:text-sm">
+          <Table className="w-full border-collapse table-fixed text-[0.6rem] sm:text-xs md:text-sm">
             <TableHeader>
               <TableRow>
                 <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap">
@@ -278,9 +280,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 {nursingClassGroups.map((group) => (
                   <TableHead
                     key={group}
-                    className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap min-w-[80px]"
+                    className="border border-pink-300 bg-pink-100 p-1 text-center font-bold min-w-0 w-1/6 overflow-hidden"
                   >
-                    <div>{group}</div>
+                    <div className="truncate">{group}</div>
                   </TableHead>
                 ))}
               </TableRow>
@@ -291,7 +293,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   <TableCell className="border border-pink-300 bg-pink-50 p-1 text-center font-medium whitespace-nowrap">
                     {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
                   </TableCell>
-                  {nursingClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
+                  {nursingClassGroups.map((group) => (
+                    <React.Fragment key={group}>{renderCell(timeSlot as TimeSlot, group)}</React.Fragment>
+                  ))}
                 </TableRow>
               ))}
             </TableBody>
