@@ -18,6 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
+        sans: ['"M PLUS Rounded 1c"', "system-ui", "sans-serif"],
         "biz-ud-gothic": ['"BIZ UDGothic"', "sans-serif"],
         "hachi-maru-pop": ['"Hachi Maru Pop"', "cursive"],
         "m-plus-rounded-1c": ['"M PLUS Rounded 1c"', "sans-serif"],

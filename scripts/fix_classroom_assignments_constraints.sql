@@ -1,0 +1,31 @@
+-- 現在の制約を確認
+SELECT conname, pg_get_constraintdef(oid) 
+FROM pg_constraint 
+WHERE conrelid = 'classroom_assignments'::regclass 
+AND contype = 'c';
+
+-- 既存のチェック制約を削除
+ALTER TABLE classroom_assignments 
+DROP CONSTRAINT IF EXISTS classroom_assignments_time_slot_check;
+
+-- 新しいチェック制約を追加（現在のコードで使用されている値に合わせる）
+ALTER TABLE classroom_assignments
+ADD CONSTRAINT classroom_assignments_time_slot_check
+CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '自　習', '補　習', '再試験'));
+
+-- テーブルの現在のデータを確認
+SELECT DISTINCT time_slot FROM classroom_assignments ORDER BY time_slot;
+
+-- 不正なデータがある場合は削除
+DELETE FROM classroom_assignments
+WHERE time_slot NOT IN ('1限目', '2限目', '昼食', '3限目', '4限目', '自　習', '補　習', '再試験');
+
+-- テーブル構造を確認（Supabase用）
+SELECT 
+    column_name, 
+    data_type, 
+    is_nullable, 
+    column_default
+FROM information_schema.columns 
+WHERE table_name = 'classroom_assignments' 
+ORDER BY ordinal_position;
