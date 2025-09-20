@@ -46,6 +46,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        Weekday: () => null,
+        Weekdays: () => null,
         DayContent: ({ date, children }: { date: any; children: any }) => {
           const w = date.getDay();
           const isHoliday = isJpHoliday(date);
