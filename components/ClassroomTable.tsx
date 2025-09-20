@@ -9,14 +9,22 @@ import type { DailyClassroomData, ClassroomType, TimeSlot } from "@/lib/classroo
 import type { ScheduleLectureInfo } from "@/lib/schedule-lectures"
 import { LectureInfoCell } from "@/components/LectureInfoCell"
 import { regularClassGroups, nursingClassGroups } from "@/lib/classrooms"
-// 教室名に応じて色クラスを返す関数
+// 教室名ごとに一意な色を割り当てる関数
+const classroomColors = [
+  "bg-red-50", "bg-orange-50", "bg-amber-50", "bg-yellow-50", "bg-lime-50", "bg-green-50", "bg-emerald-50", "bg-teal-50", "bg-cyan-50", "bg-sky-50", "bg-blue-50", "bg-indigo-50", "bg-violet-50", "bg-purple-50", "bg-fuchsia-50", "bg-pink-50", "bg-rose-50"
+];
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
 function getClassroomColor(classroom: string): string {
   if (!classroom || classroom === "---") return "";
-  if (classroom.includes("実習")) return "bg-blue-50";
-  if (classroom.includes("小教室")) return "bg-green-50";
-  if (classroom.includes("大教室")) return "bg-yellow-50";
-  if (classroom.includes("パソコン")) return "bg-purple-50";
-  return "";
+  const idx = hashString(classroom) % classroomColors.length;
+  return classroomColors[idx];
 }
 import type { ClassroomComment } from "@/lib/comments"
 import { CommentModal } from "@/components/CommentModal"
