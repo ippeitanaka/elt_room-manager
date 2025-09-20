@@ -36,8 +36,10 @@ export function DatePicker({ date, onSelect }: DatePickerProps) {
           mode="single"
           selected={date}
           onSelect={(newDate) => {
-            onSelect(newDate || new Date())
-            setOpen(false)
+            if (newDate) {
+              onSelect(newDate)
+              setOpen(false)
+            }
           }}
           initialFocus
           locale={ja}
