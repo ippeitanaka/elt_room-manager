@@ -166,7 +166,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     return (
       <TableCell
         key={`${timeSlot}-${group}`}
-        className={`border border-pink-300 p-1 text-center ${getClassroomColor(classroom || "")} ${
+        style={{ minWidth: 0 }}
+        className={`border border-pink-300 p-1 text-center min-w-0 ${getClassroomColor(classroom || "")} ${
           !isAdminView && hasComment ? "cursor-pointer" : ""
         }`}
         onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
@@ -205,7 +206,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         ) : (
           <>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <span className={`whitespace-nowrap ${hasComment ? "text-red-600 font-bold" : ""}`}>
+            <span className={`block truncate ${hasComment ? "text-red-600 font-bold" : ""} text-[0.65rem] sm:text-xs md:text-sm`}>
               {classroom || "---"}
               {hasComment && <span className="ml-1">※</span>}
             </span>
