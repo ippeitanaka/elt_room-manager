@@ -237,7 +237,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
             <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.45rem,0.8vw,1rem)]">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
+                  <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap w-[28px] min-w-[20px] max-w-[28px] truncate text-[7px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
@@ -255,7 +255,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot}>
-                    <TableCell className="border border-pink-300 bg-pink-50 p-0.5 text-center font-medium whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
+                    <TableCell className="border border-pink-300 bg-pink-50 p-0.5 text-center font-medium whitespace-nowrap w-[28px] min-w-[20px] max-w-[28px] truncate text-[7px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
                       {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) =>
