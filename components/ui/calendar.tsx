@@ -28,11 +28,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         nav_button_next: "absolute right-1",
     // Use table layout (react-day-picker renders a <table>) so use table-row / table-cell
     table: "w-full table-fixed border-collapse",
-  // apply background on each head cell so the rounded corners can be applied to first/last cells
-  head_row: "table-row",
-  head_cell: "table-cell text-center font-bold text-pink-700 text-[1rem] py-2 px-2 m-0 bg-pink-100 first:rounded-l-xl last:rounded-r-xl w-[14.2857%]",
-    row: "table-row",
-  cell: "table-cell align-middle h-9 text-center px-1 py-1 relative w-[14.2857%] [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+  // Use explicit grid for header and rows so columns line up visually
+  head_row: "block grid grid-cols-7 gap-0 w-full",
+  head_cell: "block text-center font-bold text-pink-700 text-[1rem] py-2 px-2 m-0 bg-pink-100 first:rounded-l-xl last:rounded-r-xl",
+    row: "block grid grid-cols-7 gap-0 w-full mt-2",
+    cell: "block align-middle h-9 text-center px-1 py-1 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
         day_range_end: "day-range-end",
         day_selected:
