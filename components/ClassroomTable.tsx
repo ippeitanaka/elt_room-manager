@@ -9,10 +9,7 @@ import type { DailyClassroomData, ClassroomType, TimeSlot } from "@/lib/classroo
 import type { ScheduleLectureInfo } from "@/lib/schedule-lectures"
 import { LectureInfoCell } from "@/components/LectureInfoCell"
 import { regularClassGroups, nursingClassGroups } from "@/lib/classrooms"
-// 教室名ごとに一意な色を割り当てる関数
-const classroomColors = [
-  "bg-red-50", "bg-orange-50", "bg-amber-50", "bg-yellow-50", "bg-lime-50", "bg-green-50", "bg-emerald-50", "bg-teal-50", "bg-cyan-50", "bg-sky-50", "bg-blue-50", "bg-indigo-50", "bg-violet-50", "bg-purple-50", "bg-fuchsia-50", "bg-pink-50", "bg-rose-50"
-];
+// 教室名ごとに一意なHSLカラーを割り当てる関数
 function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -21,10 +18,14 @@ function hashString(str: string): number {
   }
   return Math.abs(hash);
 }
-function getClassroomColor(classroom: string): string {
-  if (!classroom || classroom === "---") return "";
-  const idx = hashString(classroom) % classroomColors.length;
-  return classroomColors[idx];
+// HSLで色を生成（彩度・明度は固定、色相のみ分散）
+function getClassroomColorStyle(classroom: string): React.CSSProperties {
+  if (!classroom || classroom === "---") return {};
+  const hash = hashString(classroom);
+  const hue = hash % 360; // 0-359度で色相を分散
+  const saturation = 70; // 彩度
+  const lightness = 85; // 明度
+  return { backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)` };
 }
 import type { ClassroomComment } from "@/lib/comments"
 import { CommentModal } from "@/components/CommentModal"
@@ -142,7 +143,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className={`border border-pink-300 p-1 text-center ${getClassroomColor(classroom || "")}`}
+          className={`border border-pink-300 p-1 text-center`}
+          style={getClassroomColorStyle(classroom || "")}
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
@@ -174,9 +176,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     return (
       <TableCell
         key={`${timeSlot}-${group}`}
-        className={`border border-pink-300 p-1 text-center ${getClassroomColor(classroom || "")} ${
-          !isAdminView && hasComment ? "cursor-pointer" : ""
-        }`}
+        className={`border border-pink-300 p-1 text-center${!isAdminView && hasComment ? " cursor-pointer" : ""}`}
+        style={getClassroomColorStyle(classroom || "")}
         onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
       >
         {isAdminView ? (
