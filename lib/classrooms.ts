@@ -14,7 +14,7 @@ export type ClassroomType =
   | "DT3階小教室"
   | "DT4階小教室"
 
-export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "自　習" | "補　習" | "再試験"
+export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "5限目" | "6限目" | "自　習" | "補　習" | "再試験"
 
 export interface DailyClassroomData {
   "1限目": Record<string, string | null>
@@ -22,6 +22,8 @@ export interface DailyClassroomData {
   昼食: Record<string, string | null>
   "3限目": Record<string, string | null>
   "4限目": Record<string, string | null>
+  "5限目": Record<string, string | null>
+  "6限目": Record<string, string | null>
   "自　習": Record<string, string | null>
   "補　習": Record<string, string | null>
   再試験: Record<string, string | null>
@@ -37,7 +39,7 @@ export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3�
 export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "自　習", "補　習", "再試験"]
 
 // 有効な時限の配列（チェック制約と一致）
-export const VALID_TIME_SLOTS: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "自　習", "補　習", "再試験"]
+export const VALID_TIME_SLOTS: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "自　習", "補　習", "再試験"]
 
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
@@ -68,6 +70,8 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
         昼食: {},
         "3限目": {},
         "4限目": {},
+        "5限目": {},
+        "6限目": {},
         "自　習": {},
         "補　習": {},
         再試験: {},
@@ -82,6 +86,8 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
       昼食: {},
       "3限目": {},
       "4限目": {},
+      "5限目": {},
+      "6限目": {},
       "自　習": {},
       "補　習": {},
       再試験: {},
@@ -119,7 +125,7 @@ export async function saveClassroomData(date: string, data: DailyClassroomData) 
 
     for (const [classGroup, classroom] of Object.entries(groups)) {
       // 空の教室割り当ては保存しない
-      if (classroom && classroom.trim() !== "" && classroom !== "---") {
+  if (typeof classroom === "string" && classroom.trim() !== "" && classroom !== "---") {
         assignments.push({
           date,
           time_slot: timeSlot,

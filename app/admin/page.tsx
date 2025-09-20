@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { format } from "date-fns"
+import { fetchScheduleLectures, ScheduleLectureInfo } from "@/lib/schedule-lectures"
 import { ja } from "date-fns/locale"
-import { ClassroomTable } from "@/components/ClassroomTable"
+import ClassroomTable from "@/components/ClassroomTable"
 import { DatePicker } from "@/components/DatePicker"
 import { saveClassroomData, type ClassroomType, type DailyClassroomData, type TimeSlot } from "@/lib/classrooms"
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ export default function AdminPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [dailyData, setDailyData] = useState<DailyClassroomData | null>(null)
   const [comments, setComments] = useState<ClassroomComment[]>([])
+  const [lectureInfos, setLectureInfos] = useState<ScheduleLectureInfo[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -68,6 +70,10 @@ export default function AdminPage() {
         const commentsData = await commentsResponse.json()
         setComments(commentsData)
       }
+
+      // 講義情報を取得
+      const lectures = await fetchScheduleLectures(dateString)
+      setLectureInfos(lectures)
     } catch (err) {
       console.error("Failed to fetch assignments:", err)
       setError(`データの取得に失敗しました。エラー: ${err instanceof Error ? err.message : JSON.stringify(err)}`)
@@ -300,7 +306,8 @@ export default function AdminPage() {
         comments={comments}
         onCommentChange={handleCommentChange}
         onCommentDelete={handleCommentDelete}
-        date={format(selectedDate, "yyyy-MM-dd")}
+        lectureInfos={lectureInfos}
+        classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
       />
     </div>
   )

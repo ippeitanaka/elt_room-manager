@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { fetchScheduleLectures, ScheduleLectureInfo } from "@/lib/schedule-lectures"
 import { format } from "date-fns"
-import { ClassroomTable } from "@/components/ClassroomTable"
+import ClassroomTable from "@/components/ClassroomTable"
 import { DatePicker } from "@/components/DatePicker"
 import type { DailyClassroomData, ClassroomType, TimeSlot } from "@/lib/classrooms"
 import type { ClassroomComment } from "@/lib/comments"
@@ -20,6 +21,7 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
   const [comments, setComments] = useState<ClassroomComment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lectureInfos, setLectureInfos] = useState<ScheduleLectureInfo[]>([])
 
   const fetchData = useCallback(async (date: Date) => {
     setIsLoading(true)
@@ -49,8 +51,13 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
         const commentsData = await commentsResponse.json()
         setComments(commentsData)
       }
+
+      // 講義情報を取得
+      const lectures = await fetchScheduleLectures(dateString)
+  setLectureInfos(lectures)
+  console.log("[DEBUG] lectureInfos:", lectures)
     } catch (err) {
-      console.error("Failed to fetch assignments:", err)
+      console.error("Failed to fetch assignments or lectures:", err)
       setError("データの取得に失敗しました。再読み込みしてください。")
     } finally {
       setIsLoading(false)
@@ -128,7 +135,8 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
           isAdminView={false}
           onCellChange={handleCellChange}
           comments={comments}
-          date={format(selectedDate, "yyyy-MM-dd")}
+          lectureInfos={lectureInfos}
+          classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
         />
       )}
       <div className="mt-8 flex justify-between items-center">
