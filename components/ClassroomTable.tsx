@@ -256,7 +256,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot}>
                     <TableCell className="border border-pink-300 bg-pink-50 p-0.5 text-center font-medium whitespace-nowrap w-[28px] min-w-[20px] max-w-[28px] truncate text-[7px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
-                      {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
+                      {timeSlot === "自　習" ? <span className="text-[6px] sm:text-base">マイスタディ</span> : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {

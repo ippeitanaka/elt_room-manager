@@ -8,7 +8,7 @@ export interface LectureInfoCellProps {
 export const LectureInfoCell: React.FC<LectureInfoCellProps> = ({ lectureName, teacherName }) => {
   if (!lectureName && !teacherName) return null
   return (
-    <div className="text-xs text-gray-700 mt-1 whitespace-pre-line">
+    <div className="text-[6px] sm:text-xs text-gray-700 mt-1 whitespace-pre-line">
       {lectureName && <div className="font-semibold">{lectureName}</div>}
       {teacherName && <div className="text-gray-500">{teacherName}</div>}
     </div>
