@@ -10,14 +10,14 @@ interface ClassroomScheduleWrapperProps {
 }
 
 export function ClassroomScheduleWrapper({ initialData, initialDate }: ClassroomScheduleWrapperProps) {
-  // selectedDateをここで管理し、ClassroomScheduleに渡す
   const [selectedDate, setSelectedDate] = useState<Date>(() => new Date(initialDate))
   const [dailyData, setDailyData] = useState<DailyClassroomData>(initialData)
 
   return (
     <ClassroomSchedule
       initialData={dailyData}
-      initialDate={selectedDate}
+      initialDate={new Date(initialDate)}
+      selectedDate={selectedDate}
       setSelectedDate={setSelectedDate}
       setDailyData={setDailyData}
     />

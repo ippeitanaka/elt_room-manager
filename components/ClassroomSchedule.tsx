@@ -13,16 +13,13 @@ import Link from "next/link"
 interface ClassroomScheduleProps {
   initialData: DailyClassroomData
   initialDate: Date
-  setSelectedDate?: (date: Date) => void
+  selectedDate: Date
+  setSelectedDate: (date: Date) => void
   setDailyData?: (data: DailyClassroomData) => void
 }
 
-export function ClassroomSchedule({ initialData, initialDate, setSelectedDate: externalSetSelectedDate, setDailyData: externalSetDailyData }: ClassroomScheduleProps) {
-  const [selectedDate, setSelectedDateState] = useState<Date>(initialDate)
+export function ClassroomSchedule({ initialData, initialDate, selectedDate, setSelectedDate, setDailyData: externalSetDailyData }: ClassroomScheduleProps) {
   const [dailyData, setDailyDataState] = useState<DailyClassroomData>(initialData)
-
-  // 外部からset関数が渡された場合はそちらを使う
-  const setSelectedDate = externalSetSelectedDate || setSelectedDateState;
   const setDailyData = externalSetDailyData || setDailyDataState;
   const [comments, setComments] = useState<ClassroomComment[]>([])
   const [isLoading, setIsLoading] = useState(false)
