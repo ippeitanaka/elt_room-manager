@@ -12,7 +12,6 @@ interface ClassroomScheduleProps {
   dailyData: DailyClassroomData;
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
-  onDateChange: (date: Date) => void;
   comments: ClassroomComment[];
   lectureInfos: ScheduleLectureInfo[];
   isLoading: boolean;
@@ -20,7 +19,7 @@ interface ClassroomScheduleProps {
   onCellChange: (timeSlot: TimeSlot, group: string, classroom: ClassroomType | null) => void;
 }
 
-export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, onDateChange, comments, lectureInfos, isLoading, error, onCellChange }: ClassroomScheduleProps) {
+export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, comments, lectureInfos, isLoading, error, onCellChange }: ClassroomScheduleProps) {
   // 今日の日付かどうかをチェック
   const isToday = (date: Date): boolean => {
     const today = new Date()
@@ -33,13 +32,11 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, on
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date)
-    onDateChange(date)
   }
 
   const handleTodayClick = () => {
     const today = new Date();
     setSelectedDate(today)
-    onDateChange(today)
   }
 
   return (
