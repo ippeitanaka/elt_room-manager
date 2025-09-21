@@ -13,11 +13,17 @@ import Link from "next/link"
 interface ClassroomScheduleProps {
   initialData: DailyClassroomData
   initialDate: Date
+  setSelectedDate?: (date: Date) => void
+  setDailyData?: (data: DailyClassroomData) => void
 }
 
-export function ClassroomSchedule({ initialData, initialDate }: ClassroomScheduleProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(initialDate)
-  const [dailyData, setDailyData] = useState<DailyClassroomData>(initialData)
+export function ClassroomSchedule({ initialData, initialDate, setSelectedDate: externalSetSelectedDate, setDailyData: externalSetDailyData }: ClassroomScheduleProps) {
+  const [selectedDate, setSelectedDateState] = useState<Date>(initialDate)
+  const [dailyData, setDailyDataState] = useState<DailyClassroomData>(initialData)
+
+  // 外部からset関数が渡された場合はそちらを使う
+  const setSelectedDate = externalSetSelectedDate || setSelectedDateState;
+  const setDailyData = externalSetDailyData || setDailyDataState;
   const [comments, setComments] = useState<ClassroomComment[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -73,16 +79,27 @@ export function ClassroomSchedule({ initialData, initialDate }: ClassroomSchedul
   }
 
   const handleCellChange = (timeSlot: TimeSlot, group: string, classroom: ClassroomType | null) => {
-    setDailyData((prevData) => {
-      if (!prevData) return prevData
-      return {
-        ...prevData,
+    if (externalSetDailyData) {
+      // 外部管理の場合
+      externalSetDailyData({
+        ...initialData,
         [timeSlot]: {
-          ...prevData[timeSlot],
+          ...initialData[timeSlot],
           [group]: classroom,
         },
-      }
-    })
+      })
+    } else {
+      setDailyDataState((prevData) => {
+        if (!prevData) return prevData
+        return {
+          ...prevData,
+          [timeSlot]: {
+            ...prevData[timeSlot],
+            [group]: classroom,
+          },
+        }
+      })
+    }
   }
 
   const handleRefresh = () => {
