@@ -20,6 +20,17 @@ interface ClassroomScheduleProps {
 }
 
 export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, comments, lectureInfos, isLoading, error, onCellChange }: ClassroomScheduleProps) {
+  // 前日・翌日へ移動する関数
+  const handlePrevDayClick = () => {
+    const prevDate = new Date(selectedDate)
+    prevDate.setDate(selectedDate.getDate() - 1)
+    setSelectedDate(prevDate)
+  }
+  const handleNextDayClick = () => {
+    const nextDate = new Date(selectedDate)
+    nextDate.setDate(selectedDate.getDate() + 1)
+    setSelectedDate(nextDate)
+  }
   // 今日の日付かどうかをチェック
   const isToday = (date: Date): boolean => {
     const today = new Date()
@@ -48,6 +59,13 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
         </h1>
 
         <div className="flex items-center gap-2">
+          <Button
+            onClick={handlePrevDayClick}
+            variant="outline"
+            className="bg-pink-50 hover:bg-pink-100 border-pink-300"
+          >
+            前の日
+          </Button>
           <DatePicker date={selectedDate} onSelect={handleDateChange} />
           <Button
             onClick={handleTodayClick}
@@ -56,6 +74,13 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
             disabled={isToday(selectedDate)}
           >
             今日
+          </Button>
+          <Button
+            onClick={handleNextDayClick}
+            variant="outline"
+            className="bg-pink-50 hover:bg-pink-100 border-pink-300"
+          >
+            次の日
           </Button>
         </div>
       </div>
