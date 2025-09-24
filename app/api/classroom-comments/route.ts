@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { NextResponse, NextRequest } from "next/server"
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 // コメントを取得するAPI
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
   const { searchParams } = new URL(request.url)
   const date = searchParams.get("date")
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabase.from("classroom_comments").select("*").eq("date", date)
+  const { data, error } = await supabase.from("classroom_comments").select("*").eq("date", date)
 
     if (error) {
       throw error
@@ -31,7 +32,8 @@ export async function GET(request: Request) {
 }
 
 // コメントを保存するAPI
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
   try {
     const body = await request.json()
     const { date, time_slot, class_group, classroom, comment } = body
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     // 既存のコメントを確認
-    const { data: existingComment, error: fetchError } = await supabase
+  const { data: existingComment, error: fetchError } = await supabase
       .from("classroom_comments")
       .select("id")
       .eq("date", date)
@@ -63,7 +65,7 @@ export async function POST(request: Request) {
         .eq("id", existingComment.id)
     } else {
       // 新しいコメントを作成
-      result = await supabase.from("classroom_comments").insert([
+  result = await supabase.from("classroom_comments").insert([
         {
           date,
           time_slot,
@@ -89,7 +91,8 @@ export async function POST(request: Request) {
 }
 
 // コメントを削除するAPI
-export async function DELETE(request: Request) {
+export async function DELETE(request: NextRequest) {
+  const supabase = createRouteHandlerClient({ cookies });
   const { searchParams } = new URL(request.url)
   const date = searchParams.get("date")
   const time_slot = searchParams.get("time_slot")
@@ -100,7 +103,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const { error } = await supabase
+  const { error } = await supabase
       .from("classroom_comments")
       .delete()
       .eq("date", date)
