@@ -247,16 +247,16 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
           <div className="bg-gray-100 text-gray-800 font-bold text-center py-4 text-xl tracking-wide border-b border-gray-300">昼間部</div>
           <div className="overflow-x-auto w-full min-w-0">
-            <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.7rem,1vw,1.1rem)]">
+            <Table className="w-full min-w-0 border-collapse table-fixed text-xs sm:text-[clamp(0.7rem,1vw,1.1rem)]">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[32px] min-w-[24px] max-w-[32px] truncate text-[11px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
+                  <TableHead className="border border-gray-300 bg-gray-100 p-1 sm:p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] truncate text-[9px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]"
+                      className="border border-gray-300 bg-gray-100 p-1 sm:p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[36px] min-w-[24px] max-w-[36px] truncate text-[10px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]"
                     >
                       <div className="truncate">{group}</div>
                     </TableHead>
@@ -268,12 +268,12 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
-                    <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[32px] min-w-[24px] max-w-[32px] truncate text-[11px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
-                      {timeSlot === "自　習" ? <span className="text-[9px] sm:text-base font-semibold">マイスタディ</span> : timeSlot}
+                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] truncate text-[9px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
+                      {timeSlot === "自　習" ? <span className="text-[8px] sm:text-base font-semibold">マイスタディ</span> : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
-                        className: `border border-gray-300 p-3 text-center align-middle w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200` +
+                        className: `border border-gray-300 p-1 sm:p-3 text-center align-middle w-[36px] min-w-[24px] max-w-[36px] truncate text-[10px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200` +
                           (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className.replace(/rounded-[a-z0-9]+|rounded-xl|rounded-2xl|rounded|bg-pink-[0-9]+|bg-pink|text-pink-[0-9]+|text-pink|border-pink-[0-9]+|border-pink|bg-orange-[0-9]+|bg-orange|text-orange-[0-9]+|text-orange|border-orange-[0-9]+|border-orange|bg-purple-[0-9]+|bg-purple|text-purple-[0-9]+|text-purple|border-purple-[0-9]+|border-purple/g, "")}` : "")
                       })
                     )}
