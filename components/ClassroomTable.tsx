@@ -268,8 +268,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
-                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] overflow-visible">
-                      {timeSlot === "自　習" ? <span className="text-[8px] sm:text-base font-semibold">マイスタディ</span> : <span className="text-[9px] sm:text-base font-semibold">{timeSlot}</span>}
+                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] overflow-hidden">
+                      {timeSlot === "自　習" ? <span className="text-[7px] sm:text-base font-semibold">マイスタディ</span> : <span className="text-[9px] sm:text-base font-semibold">{timeSlot}</span>}
                     </TableCell>
                     {regularClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
