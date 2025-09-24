@@ -268,7 +268,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
-                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] truncate text-[9px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
+                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[24px] min-w-[18px] max-w-[24px] truncate text-[8px] sm:text-base">
                       {timeSlot === "自　習" ? <span className="text-[8px] sm:text-base font-semibold">マイスタディ</span> : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) =>
