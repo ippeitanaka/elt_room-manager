@@ -21,6 +21,10 @@ function hashString(str: string): number {
 // HSLで色を生成（彩度・明度は固定、色相のみ分散）
 function getClassroomColorStyle(classroom: string): React.CSSProperties {
   if (!classroom || classroom === "---") return {};
+  // 個別指定: 5F大教室のみ色を変更
+  if (classroom === "5F大教室") {
+    return { backgroundColor: "hsl(30, 70%, 85%)" };
+  }
   const hash = hashString(classroom);
   const hue = hash % 360; // 0-359度で色相を分散
   const saturation = 70; // 彩度
