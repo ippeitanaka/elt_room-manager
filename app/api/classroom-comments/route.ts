@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { date, time_slot, class_group, classroom, comment } = body
 
-    if (!date || !time_slot || !class_group || !classroom || !comment) {
+    if (!date || !time_slot || !class_group || !classroom) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
