@@ -1,0 +1,8 @@
+/* UD BIZゴシック Webフォント（Google Fonts未提供のため、FontPlus CDNを利用） */
+@import url('https://fonts.fontplus.jp/css?f=ud-biz-gothic');
+
+@layer base {
+  html, body, * {
+    font-family: 'UD BIZ ゴシック', 'BIZ UDGothic', 'BIZ UDゴシック', 'sans-serif' !important;
+  }
+}

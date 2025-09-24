@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +11,7 @@
 
 @layer base {
   :root {
-    --font-sans: var(--font-geist-sans);
+    --font-sans: 'UD BIZ ゴシック', 'BIZ UDGothic', 'BIZ UDゴシック', 'sans-serif';
     --font-mono: var(--font-geist-mono);
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -83,6 +84,9 @@
 }
 
 @layer base {
+  html, body, * {
+    font-family: 'BIZ UDゴシック', 'BIZ UDGothic', 'Noto Sans JP', '游ゴシック体', 'YuGothic', 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', 'Meiryo', 'sans-serif' !important;
+  }
   * {
     @apply border-border;
   }

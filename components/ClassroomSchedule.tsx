@@ -51,18 +51,21 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
   }
 
   return (
-    <div className="container mx-auto py-4 px-2 sm:py-8 sm:px-4">
+  <div className="container mx-auto py-6 px-2 sm:py-12 sm:px-6 bg-gray-50 min-h-[80vh] font-sans">
       {/* ヘッダー部分 - タイトルを左に、日付選択を右に配置 */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-pink-600 tracking-wide mb-4 sm:mb-0">
-          ELT <span className="text-pink-800">本日の教室</span>
-        </h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
+        <div className="flex items-center mb-4 sm:mb-0">
+          <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-12 w-auto mr-3" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-wide">
+            <span className="text-gray-700">ELT</span> <span className="text-gray-500">本日の教室</span>
+          </h1>
+        </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Button
             onClick={handlePrevDayClick}
             variant="outline"
-            className="bg-pink-50 hover:bg-pink-100 border-pink-300"
+            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none"
           >
             前の日
           </Button>
@@ -70,7 +73,7 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           <Button
             onClick={handleTodayClick}
             variant="outline"
-            className="bg-pink-50 hover:bg-pink-100 border-pink-300"
+            className="bg-gray-700 hover:bg-gray-800 border border-gray-700 text-white font-bold px-4 py-2 shadow-none rounded-none"
             disabled={isToday(selectedDate)}
           >
             今日
@@ -78,7 +81,7 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           <Button
             onClick={handleNextDayClick}
             variant="outline"
-            className="bg-pink-50 hover:bg-pink-100 border-pink-300"
+            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none"
           >
             次の日
           </Button>
@@ -86,27 +89,29 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
       </div>
 
       {isLoading ? (
-        <div className="text-center py-4">データを読み込んでいます...</div>
+        <div className="text-center py-6 text-lg text-gray-500 font-semibold animate-pulse">データを読み込んでいます...</div>
       ) : error ? (
-        <div className="text-center py-4 text-red-500">{error}</div>
+        <div className="text-center py-6 text-lg text-red-500 font-semibold">{error}</div>
       ) : (
-        <ClassroomTable
-          data={dailyData}
-          isAdminView={false}
-          onCellChange={onCellChange}
-          comments={comments}
-          lectureInfos={lectureInfos}
-          classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
-        />
+        <div className="bg-white border border-gray-200 p-4 sm:p-8">
+          <ClassroomTable
+            data={dailyData}
+            isAdminView={false}
+            onCellChange={onCellChange}
+            comments={comments}
+            lectureInfos={lectureInfos}
+            classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
+          />
+        </div>
       )}
-      <div className="mt-8 flex justify-between items-center">
+      <div className="mt-10 flex justify-between items-center">
         <Link href="/admin">
-          <Button variant="outline" className="bg-pink-50 hover:bg-pink-100 border-pink-300">
+          <Button variant="outline" className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none">
             教室管理
           </Button>
         </Link>
         {/* 更新ボタンは親でfetchDataを呼ぶため、ここでは何もしない */}
-        <Button onClick={() => {}} variant="outline" className="bg-pink-50 hover:bg-pink-100 border-pink-300">
+        <Button onClick={() => {}} variant="outline" className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none">
           更新
         </Button>
       </div>

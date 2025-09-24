@@ -147,27 +147,27 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className={`border border-pink-300 p-1 text-center`}
+          className={`border-none bg-white p-3 text-center rounded-xl shadow-md transition-all duration-200`}
           style={getClassroomColorStyle(classroom || "")}
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className="font-medium">{classroom || "---"}</div>
+            <div className="font-semibold text-green-700 text-base">{classroom || "---"}</div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
               placeholder="コメントを入力"
-              className="min-h-[80px] text-sm"
+              className="min-h-[80px] text-base bg-green-50 border-green-200 rounded-xl focus:ring-2 focus:ring-green-200"
             />
-            <div className="flex justify-between gap-1">
-              <Button size="sm" onClick={handleCommentSave} className="flex-1">
+            <div className="flex justify-between gap-2 mt-2">
+              <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-green-500 text-white hover:bg-green-600 rounded-xl">
                 保存
               </Button>
-              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1">
+              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1 border-green-300 text-green-700 rounded-xl">
                 キャンセル
               </Button>
               {hasComment && (
-                <Button size="sm" variant="destructive" onClick={handleCommentDelete} className="flex-1">
+                <Button size="sm" variant="destructive" onClick={handleCommentDelete} className="flex-1 bg-red-100 text-red-700 rounded-xl">
                   削除
                 </Button>
               )}
@@ -180,7 +180,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     return (
       <TableCell
         key={`${timeSlot}-${group}`}
-        className={`border border-pink-300 p-1 text-center${!isAdminView && hasComment ? " cursor-pointer" : ""}`}
+        className={`border-none bg-white p-3 text-center rounded-xl shadow-md transition-all duration-200 hover:bg-green-50${!isAdminView && hasComment ? " cursor-pointer" : ""}`}
         style={getClassroomColorStyle(classroom || "")}
         onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
       >
@@ -218,9 +218,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         ) : (
           <>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <span className={`whitespace-nowrap ${hasComment ? "text-red-600 font-bold" : ""}`}>
+            <span className={`whitespace-nowrap ${hasComment ? "text-green-700 font-bold text-base" : "text-gray-700 font-medium"}`}>
               {classroom || "---"}
-              {hasComment && <span className="ml-1">※</span>}
+              {hasComment && <span className="ml-1 text-green-400">※</span>}
             </span>
           </>
         )}
@@ -229,7 +229,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   }
 
   return (
-    <div className="w-full space-y-8">
+  <div className="w-full space-y-8">
       {/* コメントモーダル */}
       {activeComment && (
         <CommentModal
@@ -243,20 +243,20 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       )}
 
       {/* 昼間部テーブル */}
-      <div className="w-full mb-8">
-        <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-          <div className="bg-pink-100 text-pink-800 font-bold text-center py-2">昼間部</div>
+      <div className="w-full mb-8 font-sans">
+        <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
+          <div className="bg-gray-100 text-gray-800 font-bold text-center py-4 text-xl tracking-wide border-b border-gray-300">昼間部</div>
           <div className="overflow-x-auto w-full min-w-0">
-            <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.45rem,0.8vw,1rem)]">
+            <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.7rem,1vw,1.1rem)]">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap w-[28px] min-w-[20px] max-w-[28px] truncate text-[7px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
+                <TableRow className="bg-gray-100">
+                  <TableHead className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[32px] min-w-[24px] max-w-[32px] truncate text-[11px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-0.5 text-center font-bold whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[120px] sm:min-w-[80px] sm:max-w-[140px] sm:text-[clamp(0.6rem,1.2vw,1rem)]"
+                      className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]"
                     >
                       <div className="truncate">{group}</div>
                     </TableHead>
@@ -267,14 +267,14 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 {[
                   "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
                 ].map((timeSlot) => (
-                  <TableRow key={timeSlot}>
-                    <TableCell className="border border-pink-300 bg-pink-50 p-0.5 text-center font-medium whitespace-nowrap w-[28px] min-w-[20px] max-w-[28px] truncate text-[7px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
-                      {timeSlot === "自　習" ? <span className="text-[6px] sm:text-base">マイスタディ</span> : timeSlot}
+                  <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
+                    <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[32px] min-w-[24px] max-w-[32px] truncate text-[11px] sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
+                      {timeSlot === "自　習" ? <span className="text-[9px] sm:text-base font-semibold">マイスタディ</span> : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
-                        className: `border border-pink-300 p-0.5 text-center align-middle w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[120px] sm:min-w-[80px] sm:max-w-[140px] sm:text-[clamp(0.6rem,1.2vw,1rem)]` +
-                          (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className}` : "")
+                        className: `border border-gray-300 p-3 text-center align-middle w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200` +
+                          (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className.replace(/rounded-[a-z0-9]+|rounded-xl|rounded-2xl|rounded|bg-pink-[0-9]+|bg-pink|text-pink-[0-9]+|text-pink|border-pink-[0-9]+|border-pink|bg-orange-[0-9]+|bg-orange|text-orange-[0-9]+|text-orange|border-orange-[0-9]+|border-orange|bg-purple-[0-9]+|bg-purple|text-purple-[0-9]+|text-purple|border-purple-[0-9]+|border-purple/g, "")}` : "")
                       })
                     )}
                   </TableRow>
@@ -286,20 +286,20 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       </div>
 
       {/* 夜間部テーブル */}
-      <div className="w-full">
-        <div className="border-4 border-pink-300 rounded-lg overflow-hidden">
-          <div className="bg-pink-100 text-pink-800 font-bold text-center py-2">夜間部</div>
+      <div className="w-full font-sans">
+        <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
+          <div className="bg-gray-100 text-gray-800 font-bold text-center py-4 text-xl tracking-wide border-b border-gray-300">夜間部</div>
           <div className="overflow-x-auto w-full min-w-0">
-            <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.45rem,0.8vw,1rem)]">
+            <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.7rem,1vw,1.1rem)]">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="border border-pink-300 bg-pink-100 p-1 text-center font-bold whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
+                <TableRow className="bg-gray-100">
+                  <TableHead className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
                     時限
                   </TableHead>
                   {nursingClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-pink-300 bg-pink-100 p-0.5 text-center font-bold whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[120px] sm:min-w-[80px] sm:max-w-[140px] sm:text-[clamp(0.6rem,1.2vw,1rem)]"
+                      className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 whitespace-nowrap w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]"
                     >
                       <div className="truncate">{group}</div>
                     </TableHead>
@@ -308,14 +308,14 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </TableHeader>
               <TableBody>
                 {["5限目","6限目","自　習","補　習","再試験"].map((timeSlot) => (
-                  <TableRow key={timeSlot}>
-                    <TableCell className="border border-pink-300 bg-pink-50 p-0.5 text-center font-medium whitespace-nowrap w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[80px] sm:min-w-[60px] sm:max-w-[100px] sm:text-[clamp(0.6rem,1.2vw,1rem)]">
+                  <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
+                    <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 whitespace-nowrap w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)]">
                       {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
                     </TableCell>
                     {nursingClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
-                        className: `border border-pink-300 p-0.5 text-center align-middle w-[60px] min-w-[36px] max-w-[60px] truncate text-[8px] sm:w-[120px] sm:min-w-[80px] sm:max-w-[140px] sm:text-[clamp(0.6rem,1.2vw,1rem)]` +
-                          (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className}` : "")
+                        className: `border border-gray-300 p-3 text-center align-middle w-[70px] min-w-[40px] max-w-[70px] truncate text-[12px] sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200` +
+                          (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className.replace(/rounded-[a-z0-9]+|rounded-xl|rounded-2xl|rounded|bg-pink-[0-9]+|bg-pink|text-pink-[0-9]+|text-pink|border-pink-[0-9]+|border-pink|bg-orange-[0-9]+|bg-orange|text-orange-[0-9]+|text-orange|border-orange-[0-9]+|border-orange|bg-purple-[0-9]+|bg-purple|text-purple-[0-9]+|text-purple|border-purple-[0-9]+|border-purple/g, "")}` : "")
                       })
                     )}
                   </TableRow>
