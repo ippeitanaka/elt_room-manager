@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server"
+import { cookies } from "next/headers"
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 // コメントを取得するAPI
