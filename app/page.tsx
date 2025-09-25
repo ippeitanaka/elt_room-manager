@@ -1,7 +1,6 @@
 import { ClassroomScheduleWrapper } from "@/components/ClassroomScheduleWrapper"
 import { ErrorDisplay } from "@/components/ErrorDisplay"
 import { getClassroomData } from "@/lib/classrooms"
-import { testSupabaseConnection } from "@/lib/supabase"
 
 // This is a server component, so revalidate is valid here
 export const revalidate = 0
@@ -11,12 +10,6 @@ export default async function Home() {
   const dateString = today.toISOString().split("T")[0]
 
   try {
-    // Test Supabase connection
-    const isConnected = await testSupabaseConnection()
-    if (!isConnected) {
-      throw new Error("Unable to connect to Supabase")
-    }
-
     const initialData = await getClassroomData(dateString)
     if (!initialData) {
       throw new Error("Failed to fetch initial data")
