@@ -129,14 +129,27 @@ export default function AdminPage() {
   }, [])
 
   const handleCommentChange = async (timeSlot: TimeSlot, group: string, classroom: string, comment: string) => {
-    if (!comment.trim()) {
-      alert("コメントを入力してください。")
-      return
-    }
-
     setIsLoading(true)
     const dateString = format(selectedDate, "yyyy-MM-dd")
     try {
+      if (!comment.trim()) {
+        // 空白ならコメント削除APIを呼ぶ
+        const response = await fetch(
+          `/api/classroom-comments?date=${dateString}&time_slot=${timeSlot}&class_group=${group}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          },
+        )
+        if (!response.ok) {
+          throw new Error("コメントの削除に失敗しました。")
+        }
+        setComments(comments.filter((c) => !(c.time_slot === timeSlot && c.class_group === group)))
+        alert("コメントが削除されました。")
+        return
+      }
+
+      // 通常のコメント保存
       const response = await fetch("/api/classroom-comments", {
         method: "POST",
         headers: {
