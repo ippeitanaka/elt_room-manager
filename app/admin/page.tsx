@@ -54,6 +54,7 @@ export default function AdminPage() {
       // 教室データを取得
       const response = await fetch(`/api/classroom-data?date=${dateString}&timestamp=${Date.now()}`, {
         cache: "no-store",
+        credentials: "include",
       })
       if (!response.ok) {
         const errorText = await response.text()
@@ -65,6 +66,7 @@ export default function AdminPage() {
       // コメントデータを取得
       const commentsResponse = await fetch(`/api/classroom-comments?date=${dateString}&timestamp=${Date.now()}`, {
         cache: "no-store",
+        credentials: "include",
       })
       if (commentsResponse.ok) {
         const commentsData = await commentsResponse.json()
@@ -147,6 +149,7 @@ export default function AdminPage() {
           classroom,
           comment,
         }),
+        credentials: "include",
       })
 
       if (!response.ok) {
@@ -200,6 +203,7 @@ export default function AdminPage() {
         `/api/classroom-comments?date=${dateString}&time_slot=${timeSlot}&class_group=${group}`,
         {
           method: "DELETE",
+          credentials: "include",
         },
       )
 
