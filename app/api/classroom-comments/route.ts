@@ -5,6 +5,14 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 // コメントを取得するAPI
 export async function GET(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  console.log('[API][GET] user:', user, 'userError:', userError);
+  if (!user || userError) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { searchParams } = new URL(request.url);
   const date = searchParams.get("date");
 
@@ -33,6 +41,14 @@ export async function GET(request: NextRequest) {
 // コメントを保存するAPI
 export async function POST(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  console.log('[API][POST] user:', user, 'userError:', userError);
+  if (!user || userError) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { date, time_slot, class_group, classroom, comment } = body;
@@ -92,6 +108,14 @@ export async function POST(request: NextRequest) {
 // コメントを削除するAPI
 export async function DELETE(request: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  console.log('[API][DELETE] user:', user, 'userError:', userError);
+  if (!user || userError) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { searchParams } = new URL(request.url);
   const date = searchParams.get("date");
   const time_slot = searchParams.get("time_slot");
