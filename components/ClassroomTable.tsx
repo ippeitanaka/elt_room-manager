@@ -218,7 +218,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         ) : (
           <>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <span className={`${hasComment ? "text-green-700 font-bold text-base" : "text-gray-700 font-medium"} text-[10px] sm:text-base break-all whitespace-normal`}>
+            <span className={`${hasComment ? "text-green-700 font-bold" : "text-gray-700 font-medium"} text-xs sm:text-base break-words whitespace-pre-line hyphens-auto`}>
               {classroom || "---"}
               {hasComment && <span className="ml-1 text-green-400">※</span>}
             </span>
