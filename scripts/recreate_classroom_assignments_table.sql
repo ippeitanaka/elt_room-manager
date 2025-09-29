@@ -45,19 +45,7 @@ CREATE TRIGGER update_classroom_assignments_updated_at
     EXECUTE FUNCTION update_updated_at_column();
 
 -- RLSポリシーの設定
-ALTER TABLE classroom_assignments ENABLE ROW LEVEL SECURITY;
-
--- 全ユーザーの読み取りポリシー
-CREATE POLICY "Enable read access for all users"
-ON classroom_assignments FOR SELECT
-USING (true);
-
--- 認証済みユーザーの更新ポリシー
-CREATE POLICY "Enable insert/update/delete for authenticated users"
-ON classroom_assignments FOR ALL
-TO authenticated
-USING (auth.role() = 'authenticated')
-WITH CHECK (auth.role() = 'authenticated');
+ALTER TABLE classroom_assignments DISABLE ROW LEVEL SECURITY;
 
 -- コメントを追加
 COMMENT ON TABLE classroom_assignments IS '教室割り当てテーブル';

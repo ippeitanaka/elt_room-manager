@@ -22,3 +22,6 @@ CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限
 
 -- ステップ5: 制約が正しく追加されたか確認
 SELECT 'Constraint added successfully' as result;
+
+-- RLSを無効化（認証なしでアクセス可能にする）
+ALTER TABLE classroom_assignments DISABLE ROW LEVEL SECURITY;

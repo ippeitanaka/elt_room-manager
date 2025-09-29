@@ -35,12 +35,5 @@ WHERE time_slot NOT IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5
 -- コミット
 COMMIT;
 
--- テーブル構造を確認（Supabase用）
-SELECT 
-    column_name, 
-    data_type, 
-    is_nullable, 
-    column_default
-FROM information_schema.columns 
-WHERE table_name = 'classroom_assignments' 
-ORDER BY ordinal_position;
+-- RLSを無効化（認証なしでアクセス可能にする）
+ALTER TABLE classroom_assignments DISABLE ROW LEVEL SECURITY;
