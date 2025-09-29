@@ -14,7 +14,7 @@ export type ClassroomType =
   | "DT3階小教室"
   | "DT4階小教室"
 
-export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "5限目" | "6限目" | "自　習" | "補　習" | "再試験"
+export type TimeSlot = "1限目" | "2限目" | "昼食" | "3限目" | "4限目" | "5限目" | "6限目" | "自　習" | "補習（午前）" | "補習（午後）" | "再試験"
 
 export interface DailyClassroomData {
   "1限目": Record<string, string | null>
@@ -25,7 +25,8 @@ export interface DailyClassroomData {
   "5限目": Record<string, string | null>
   "6限目": Record<string, string | null>
   "自　習": Record<string, string | null>
-  "補　習": Record<string, string | null>
+  "補習（午前）": Record<string, string | null>
+  "補習（午後）": Record<string, string | null>
   再試験: Record<string, string | null>
 }
 
@@ -35,11 +36,11 @@ export type ClassroomData = {
 
 export const regularClassGroups = ["1-A", "1-B", "2-A", "2-B", "3-A", "3-B"]
 export const nursingClassGroups = ["1-N", "2-N", "3-N"]
-export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "自　習", "補　習", "再試験"]
-export const nursingTimeSlots: TimeSlot[] = ["1限目", "2限目", "自　習", "補　習", "再試験"]
+export const regularTimeSlots: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "自　習", "補習（午前）", "補習（午後）", "再試験"]
+export const nursingTimeSlots: TimeSlot[] = ["5限目", "6限目", "自　習", "補習（午前）", "補習（午後）", "再試験"]
 
 // 有効な時限の配列（チェック制約と一致）
-export const VALID_TIME_SLOTS: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "自　習", "補　習", "再試験"]
+export const VALID_TIME_SLOTS: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "自　習", "補習（午前）", "補習（午後）", "再試験"]
 
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
@@ -73,7 +74,8 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
         "5限目": {},
         "6限目": {},
         "自　習": {},
-        "補　習": {},
+        "補習（午前）": {},
+        "補習（午後）": {},
         再試験: {},
       }
     }
@@ -89,7 +91,8 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
       "5限目": {},
       "6限目": {},
       "自　習": {},
-      "補　習": {},
+      "補習（午前）": {},
+      "補習（午後）": {},
       再試験: {},
     }
 
