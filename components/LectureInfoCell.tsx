@@ -9,7 +9,7 @@ export const LectureInfoCell: React.FC<LectureInfoCellProps> = ({ lectureName, t
   if (!lectureName && !teacherName) return null
   return (
     <div className="text-[6px] sm:text-xs text-gray-700 mt-1 whitespace-pre-line">
-      {lectureName && <div className="font-semibold">{lectureName}</div>}
+      {lectureName && <div className="font-semibold">{lectureName === "マイスタディ" ? <><span className="sm:hidden">マイスタ</span><span className="hidden sm:inline">マイスタディ</span></> : lectureName}</div>}
       {teacherName && <div className="text-gray-500">{teacherName}</div>}
     </div>
   )
