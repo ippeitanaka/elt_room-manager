@@ -152,7 +152,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className="font-semibold text-green-700 text-base">{classroom || "---"}</div>
+            <div className="font-semibold text-green-700 text-xs sm:text-base">{classroom || "---"}</div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
@@ -270,7 +270,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
                     <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[24px] sm:min-w-[18px] sm:max-w-[24px] overflow-hidden text-[10px] break-all whitespace-normal">
                       {timeSlot === "自　習" ? (
-                        <span className="text-[6px] sm:text-base font-semibold text-center block">
+                        <span className="text-[4px] sm:text-base font-semibold text-center block">
                           <span className="sm:hidden">マイスタ</span>
                           <span className="hidden sm:inline">マイスタディ</span>
                         </span>
