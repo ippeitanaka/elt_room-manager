@@ -11,7 +11,7 @@ DROP CONSTRAINT IF EXISTS classroom_assignments_time_slot_check;
 -- 新しいチェック制約を追加（現在のコードで使用されている値に合わせる）
 ALTER TABLE classroom_assignments
 ADD CONSTRAINT classroom_assignments_time_slot_check
-CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', '自　習', '補習（午前）', '補習（午後）', '再試験'));
+CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', 'マイスタ（午前）', 'マイスタ（午後）', '補習（午前）', '補習（午後）', '再試験'));
 
 -- テーブルの現在のデータを確認
 SELECT DISTINCT time_slot FROM classroom_assignments ORDER BY time_slot;

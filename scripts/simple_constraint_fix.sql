@@ -13,12 +13,12 @@ ORDER BY time_slot;
 
 -- ステップ3: 不正データの削除
 DELETE FROM classroom_assignments
-WHERE time_slot NOT IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', '自　習', '補習（午前）', '補習（午後）', '再試験');
+WHERE time_slot NOT IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', 'マイスタ（午前）', 'マイスタ（午後）', '補習（午前）', '補習（午後）', '再試験');
 
 -- ステップ4: 新しい制約の追加
 ALTER TABLE classroom_assignments
 ADD CONSTRAINT classroom_assignments_time_slot_check
-CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', '自　習', '補習（午前）', '補習（午後）', '再試験'));
+CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', 'マイスタ（午前）', 'マイスタ（午後）', '補習（午前）', '補習（午後）', '再試験'));
 
 -- ステップ5: 制約が正しく追加されたか確認
 SELECT 'Constraint added successfully' as result;

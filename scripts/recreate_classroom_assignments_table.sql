@@ -20,7 +20,7 @@ CREATE TABLE classroom_assignments (
 -- チェック制約を追加
 ALTER TABLE classroom_assignments
 ADD CONSTRAINT classroom_assignments_time_slot_check
-CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', '自　習', '補習（午前）', '補習（午後）', '再試験'));
+CHECK (time_slot IN ('1限目', '2限目', '昼食', '3限目', '4限目', '5限目', '6限目', 'マイスタ（午前）', 'マイスタ（午後）', '補習（午前）', '補習（午後）', '再試験'));
 
 ALTER TABLE classroom_assignments
 ADD CONSTRAINT classroom_assignments_classroom_check

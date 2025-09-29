@@ -127,7 +127,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   // セル描画関数
   function renderCell(timeSlot: TimeSlot, group: string) {
     const classroom = data[timeSlot]?.[group] || null;
-    const isSpecialTimeSlot = ["自　習", "補習（午前）", "補習（午後）", "再試験"].includes(timeSlot);
+    const isSpecialTimeSlot = ["マイスタ（午前）", "マイスタ（午後）", "補習（午前）", "補習（午後）", "再試験"].includes(timeSlot);
     const comment = findComment(timeSlot, group);
     const hasComment = !!comment;
     let lectureName: string | null | undefined = null;
@@ -312,10 +312,10 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {["5限目","6限目","自　習","補習（午前）","補習（午後）","再試験"].map((timeSlot) => (
+                {["5限目","6限目","マイスタ（午前）","マイスタ（午後）","補習（午前）","補習（午後）","再試験"].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
                     <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal">
-                      {timeSlot === "自　習" ? <span><span className="sm:hidden">マイスタ</span><span className="hidden sm:inline">マイスタディ</span></span> : timeSlot}
+                      {timeSlot === "マイスタ（午前）" ? <span><span className="sm:hidden">マイスタ午前</span><span className="hidden sm:inline">マイスタ（午前）</span></span> : timeSlot === "マイスタ（午後）" ? <span><span className="sm:hidden">マイスタ午後</span><span className="hidden sm:inline">マイスタ（午後）</span></span> : timeSlot}
                     </TableCell>
                     {nursingClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
