@@ -1,7 +1,7 @@
 "use client"
 
 import { ClassroomSchedule } from "@/components/ClassroomSchedule"
-import type { DailyClassroomData } from "@/lib/classrooms"
+import type { DailyClassroomData, ClassroomType } from "@/lib/classrooms"
 import { useState } from "react"
 
 interface ClassroomScheduleWrapperProps {
@@ -56,7 +56,8 @@ export function ClassroomScheduleWrapper({ initialData, initialDate }: Classroom
     setSelectedDate(date)
   }
 
-  const handleCellChange = (timeSlot: string, group: string, classroom: ClassroomType | null) => {
+  const handleCellChange = async (timeSlot: string, group: string, classroom: ClassroomType | null) => {
+    // まずローカルstateを更新
     setDailyData((prevData) => {
       return {
         ...prevData,
@@ -66,6 +67,36 @@ export function ClassroomScheduleWrapper({ initialData, initialDate }: Classroom
         },
       }
     })
+
+    // Supabaseに保存
+    try {
+      const dateString = format(selectedDate, "yyyy-MM-dd")
+      const response = await fetch('/api/classroom-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          date: dateString,
+          timeSlot,
+          classGroup: group,
+          classroom,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      // 保存成功
+      console.log('Classroom data saved successfully')
+    } catch (error) {
+      console.error('Failed to save classroom data:', error)
+      // エラーが発生したらローカルstateを元に戻す
+      setError('データの保存に失敗しました')
+      // 元のデータを再取得
+      fetchData(selectedDate)
+    }
   }
 
   return (
