@@ -152,7 +152,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className="font-semibold text-green-700 text-[10px] sm:text-base">{classroom || "---"}</div>
+            <div className="font-semibold text-green-700 text-[8px] sm:text-base">{classroom || "---"}</div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
@@ -218,7 +218,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         ) : (
           <>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <span className={`${hasComment ? "text-green-700 font-bold" : "text-gray-700 font-medium"} text-[10px] sm:text-base break-words whitespace-pre-line hyphens-auto`}>
+            <span className={`${hasComment ? "text-green-700 font-bold" : "text-gray-700 font-medium"} text-[8px] sm:text-base break-words whitespace-pre-line hyphens-auto`}>
               {classroom || "---"}
               {hasComment && <span className="ml-1 text-green-400">※</span>}
             </span>
@@ -315,7 +315,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 {["5限目","6限目","自　習","補　習","再試験"].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
                     <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal">
-                      {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
+                      {timeSlot === "自　習" ? <span><span className="sm:hidden">マイスタ</span><span className="hidden sm:inline">マイスタディ</span></span> : timeSlot}
                     </TableCell>
                     {nursingClassGroups.map((group) =>
                       React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
