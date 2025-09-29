@@ -265,14 +265,19 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </TableHeader>
               <TableBody>
                 {[
-                  "1限目","2限目","昼食","3限目","4限目","自　習","補　習","再試験"
+                  "1限目","2限目","昼食","3限目","4限目","マイスタ（午前）","マイスタ（午後）","補習（午前）","補習（午後）","再試験"
                 ].map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
                     <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[24px] sm:min-w-[18px] sm:max-w-[24px] overflow-hidden text-[10px] break-all whitespace-normal">
-                      {timeSlot === "自　習" ? (
+                      {timeSlot === "マイスタ（午前）" ? (
                         <span className="text-[4px] sm:text-base font-semibold text-center block">
-                          <span className="sm:hidden">マイスタ</span>
-                          <span className="hidden sm:inline">マイスタディ</span>
+                          <span className="sm:hidden">マイスタ午前</span>
+                          <span className="hidden sm:inline">マイスタ（午前）</span>
+                        </span>
+                      ) : timeSlot === "マイスタ（午後）" ? (
+                        <span className="text-[4px] sm:text-base font-semibold text-center block">
+                          <span className="sm:hidden">マイスタ午後</span>
+                          <span className="hidden sm:inline">マイスタ（午後）</span>
                         </span>
                       ) : <span className="text-[9px] sm:text-base font-semibold">{timeSlot}</span>}
                     </TableCell>
