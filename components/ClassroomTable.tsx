@@ -124,29 +124,29 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   const findComment = (timeSlot: string, group: string) =>
     comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
-  const getDynamicFontClass = (text: string | null | undefined) => {
+  const getDynamicFontStyle = (text: string | null | undefined): React.CSSProperties => {
     if (!text || text === "---") {
-      return "text-sm sm:text-base";
+      return { fontSize: "clamp(0.7rem, 2.5vw, 0.95rem)" };
     }
 
     const normalizedLength = text.replace(/\s+/g, "").length;
 
     if (normalizedLength <= 6) {
-      return "text-base sm:text-lg";
+      return { fontSize: "clamp(0.9rem, 3.4vw, 1.25rem)" };
     }
     if (normalizedLength <= 10) {
-      return "text-sm sm:text-base";
+      return { fontSize: "clamp(0.85rem, 3vw, 1.1rem)" };
     }
     if (normalizedLength <= 14) {
-      return "text-[13px] sm:text-sm";
+      return { fontSize: "clamp(0.8rem, 2.7vw, 1.05rem)" };
     }
     if (normalizedLength <= 18) {
-      return "text-[12px] sm:text-[13px]";
+      return { fontSize: "clamp(0.75rem, 2.4vw, 0.98rem)" };
     }
     if (normalizedLength <= 24) {
-      return "text-[11px] sm:text-xs";
+      return { fontSize: "clamp(0.7rem, 2.2vw, 0.92rem)" };
     }
-    return "text-[10px] sm:text-[11px]";
+    return { fontSize: "clamp(0.62rem, 1.9vw, 0.85rem)" };
   };
 
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
@@ -208,7 +208,12 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className={`font-semibold text-green-700 ${getDynamicFontClass(classroom)} whitespace-nowrap leading-tight`}>{classroom || "---"}</div>
+            <div
+              className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight"
+              style={getDynamicFontStyle(classroom)}
+            >
+              {classroom || "---"}
+            </div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
@@ -290,8 +295,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"}`}>
               <span
-                className={`block ${getDynamicFontClass(classroom)} whitespace-nowrap leading-tight`}
+                className="block whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
+                style={getDynamicFontStyle(classroom)}
               >
                 {classroom || "---"}
               </span>
