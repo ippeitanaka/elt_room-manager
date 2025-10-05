@@ -185,10 +185,10 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
           className="border border-gray-300 align-top bg-white px-2 py-3 sm:px-3 sm:py-4 text-center text-xs sm:text-sm"
           style={getClassroomColorStyle(classroom || "")}
         >
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <div
-              className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight"
+              className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight text-center"
               style={getDynamicFontStyle()}
             >
               {classroom || "---"}
@@ -199,7 +199,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               placeholder="コメントを入力"
               className="min-h-[80px] text-sm sm:text-base bg-green-50 border-green-200 focus:ring-2 focus:ring-green-200"
             />
-            <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-2">
               <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-green-500 text-white hover:bg-green-600">
                 保存
               </Button>
@@ -232,7 +232,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
       >
         {isAdminView ? (
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <Select
               value={classroom || undefined}
@@ -254,7 +254,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </SelectContent>
             </Select>
             {classroom && (
-              <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
                 <Button
                   size="sm"
                   variant="outline"
@@ -266,13 +266,13 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </div>
             )}
             {hasComment && comment && (
-              <p className="text-left text-[11px] text-green-700 sm:text-xs">{comment.comment}</p>
+              <p className="text-center text-[11px] text-green-700 sm:text-xs">{comment.comment}</p>
             )}
           </div>
         ) : (
-          <div className="space-y-1">
+          <div className="space-y-1 text-center">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"}`}>
+            <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"} text-center`}>
               <span
                 className="block whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
@@ -282,7 +282,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </span>
             </div>
             {hasComment && (
-              <div className="text-[11px] text-green-600 sm:text-xs">コメントあり（タップで表示）</div>
+              <div className="text-[11px] text-green-600 sm:text-xs text-center">コメントあり（タップで表示）</div>
             )}
           </div>
         )}
