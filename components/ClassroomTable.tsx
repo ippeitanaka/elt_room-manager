@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
@@ -67,6 +67,30 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     group: string;
     comment: string;
   } | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 639px)");
+
+    const updateMatch = (event: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(event.matches);
+    };
+
+    updateMatch(mediaQuery);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updateMatch);
+      return () => mediaQuery.removeEventListener("change", updateMatch);
+    }
+
+    // Safari fallback
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mqAny = mediaQuery as any;
+    mqAny.addListener?.(updateMatch);
+    return () => mqAny.removeListener?.(updateMatch);
+  }, []);
 
   const getCellContext = (timeSlot: TimeSlot, group: string) => {
     const classroom = data[timeSlot]?.[group] || null;
@@ -125,6 +149,10 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
   const getDynamicFontStyle = (text: string | null | undefined): React.CSSProperties => {
+    if (isMobile) {
+      return { fontSize: "0.85rem" };
+    }
+
     const cleaned = (text ?? "").replace(/\s+/g, "");
     const length = cleaned.length;
 
@@ -212,9 +240,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
           style={getClassroomColorStyle(classroom || "")}
         >
           <div className="space-y-2 text-center">
-            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
+            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
             <div
-              className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight text-center"
+              className="font-semibold text-green-700 whitespace-normal sm:whitespace-nowrap leading-tight tracking-tight text-center"
               style={getDynamicFontStyle(classroom)}
             >
               {classroom || "---"}
@@ -259,7 +287,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       >
         {isAdminView ? (
           <div className="space-y-2 text-center">
-            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
+            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
             <Select
               value={classroom || undefined}
               onValueChange={(value: string) =>
@@ -297,10 +325,10 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
           </div>
         ) : (
           <div className="space-y-1 text-center">
-            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
+            <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
             <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"} text-center`}>
               <span
-                className="block whitespace-nowrap leading-tight tracking-tight"
+                className="block whitespace-normal sm:whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
                 style={getDynamicFontStyle(classroom)}
               >
