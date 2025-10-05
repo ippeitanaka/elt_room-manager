@@ -96,102 +96,6 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     };
   };
 
-  const getMobileTimeSlotLabel = (timeSlot: TimeSlot) => {
-    switch (timeSlot) {
-      case "自　習":
-        return "マイスタディ";
-      case "マイスタ（午前）":
-        return "マイスタ（午前）";
-      case "マイスタ（午後）":
-        return "マイスタ（午後）";
-      case "補習（午前）":
-        return "補習（午前）";
-      case "補習（午後）":
-        return "補習（午後）";
-      default:
-        return timeSlot;
-    }
-  };
-
-  const renderMobileSection = (title: string, timeSlots: TimeSlot[], groups: string[]) => (
-    <section key={title} className="space-y-3">
-      <h2 className="text-lg font-bold text-gray-800">{title}</h2>
-      {timeSlots.map((timeSlot) => (
-        <div key={timeSlot} className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between bg-gray-100 px-4 py-2">
-            <span className="text-base font-semibold text-gray-800">{getMobileTimeSlotLabel(timeSlot)}</span>
-          </div>
-          <div className="divide-y divide-gray-100">
-            {groups.map((group) => {
-              const { classroom, hasComment, lectureName, teacherName, isSpecialTimeSlot } = getCellContext(timeSlot, group);
-              const rowKey = `${timeSlot}-${group}`;
-              const handleRowClick = () => {
-                if (!isAdminView && classroom) {
-                  handleCellClick(timeSlot, group, classroom);
-                }
-              };
-
-              return (
-                <div
-                  key={rowKey}
-                  className={`px-4 py-3 ${!isAdminView && hasComment && classroom ? "cursor-pointer" : ""}`}
-                  onClick={!isAdminView && hasComment && classroom ? handleRowClick : undefined}
-                >
-                  <div className="flex flex-wrap items-center gap-2 justify-between">
-                    <span className="text-sm font-semibold text-gray-700">{group}</span>
-                    {isAdminView ? (
-                      <div className="min-w-[140px] flex-1">
-                        <Select
-                          value={classroom || undefined}
-                          onValueChange={(value: string) =>
-                            onCellChange(timeSlot, group, value === "---" ? null : (value as ClassroomType))
-                          }
-                          disabled={!isSpecialTimeSlot && !isAdminView}
-                        >
-                          <SelectTrigger className="w-full text-sm">
-                            <SelectValue placeholder="選択" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="---">---</SelectItem>
-                            {classroomOptions.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ) : (
-                      <span className={`text-sm font-medium ${classroom ? "text-gray-900" : "text-gray-400"}`}>
-                        {classroom || "---"}
-                      </span>
-                    )}
-                  </div>
-                  <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-                  {isAdminView && classroom && (
-                    <div className="mt-2 flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 text-xs"
-                        onClick={() => handleCommentEdit(timeSlot, group)}
-                      >
-                        {hasComment ? "コメント編集" : "コメント追加"}
-                      </Button>
-                    </div>
-                  )}
-                  {!isAdminView && hasComment && (
-                    <div className="mt-2 text-xs text-green-600">コメントあり（タップで表示）</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-
   const regularTimeSlotsOrder: TimeSlot[] = [
     "1限目",
     "2限目",
@@ -217,18 +121,16 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     return <div>データが利用できません。</div>;
   }
 
-  // コメントを検索する関数
-  const findComment = (timeSlot: string, group: string) => {
-    return comments.find((comment) => comment.time_slot === timeSlot && comment.class_group === group);
-  };
+  const findComment = (timeSlot: string, group: string) =>
+    comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
     if (!isAdminView && classroom) {
-      const comment = findComment(timeSlot, group);
-      if (comment) {
+      const commentItem = findComment(timeSlot, group);
+      if (commentItem) {
         setActiveComment({
-          classroom: comment.classroom,
-          comment: comment.comment,
+          classroom: commentItem.classroom,
+          comment: commentItem.comment,
           timeSlot,
           classGroup: group,
         });
@@ -238,11 +140,11 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   };
 
   const handleCommentEdit = (timeSlot: TimeSlot, group: string) => {
-    const comment = findComment(timeSlot, group);
+    const commentItem = findComment(timeSlot, group);
     setEditingComment({
       timeSlot,
       group,
-      comment: comment ? comment.comment : "",
+      comment: commentItem ? commentItem.comment : "",
     });
   };
 
@@ -269,36 +171,34 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     }
   };
 
-  // セル描画関数
-  function renderCell(timeSlot: TimeSlot, group: string) {
+  const renderCell = (timeSlot: TimeSlot, group: string) => {
     const { classroom, isSpecialTimeSlot, comment, hasComment, lectureName, teacherName } = getCellContext(timeSlot, group);
 
-    // 編集中のコメント
     if (isAdminView && editingComment && editingComment.timeSlot === timeSlot && editingComment.group === group) {
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className={`border-none bg-white p-3 text-center rounded-xl shadow-md transition-all duration-200`}
+          className="border border-gray-300 align-top bg-white px-2 py-3 sm:px-3 sm:py-4 text-center text-xs sm:text-sm"
           style={getClassroomColorStyle(classroom || "")}
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className="font-semibold text-green-700 text-[6px] sm:text-base">{classroom || "---"}</div>
+            <div className="font-semibold text-green-700 text-sm sm:text-base">{classroom || "---"}</div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
               placeholder="コメントを入力"
-              className="min-h-[80px] text-base bg-green-50 border-green-200 rounded-xl focus:ring-2 focus:ring-green-200"
+              className="min-h-[80px] text-sm sm:text-base bg-green-50 border-green-200 focus:ring-2 focus:ring-green-200"
             />
-            <div className="flex justify-between gap-2 mt-2">
-              <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-green-500 text-white hover:bg-green-600 rounded-xl">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+              <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-green-500 text-white hover:bg-green-600">
                 保存
               </Button>
-              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1 border-green-300 text-green-700 rounded-xl">
+              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1 border-green-300 text-green-700">
                 キャンセル
               </Button>
               {hasComment && (
-                <Button size="sm" variant="destructive" onClick={handleCommentDelete} className="flex-1 bg-red-100 text-red-700 rounded-xl">
+                <Button size="sm" variant="destructive" onClick={handleCommentDelete} className="flex-1">
                   削除
                 </Button>
               )}
@@ -308,22 +208,31 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       );
     }
 
+    const className = [
+      "border border-gray-300 align-top bg-white px-2 py-3 sm:px-3 sm:py-4 text-center text-xs sm:text-sm transition-colors duration-150",
+      !isAdminView && hasComment ? "cursor-pointer" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
     return (
       <TableCell
         key={`${timeSlot}-${group}`}
-        className={`border-none bg-white p-3 text-center rounded-xl shadow-md transition-all duration-200 hover:bg-green-50${!isAdminView && hasComment ? " cursor-pointer" : ""}`}
+        className={className}
         style={getClassroomColorStyle(classroom || "")}
         onClick={() => !isAdminView && handleCellClick(timeSlot, group, classroom)}
       >
         {isAdminView ? (
-          <div className="space-y-1">
+          <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <Select
               value={classroom || undefined}
-              onValueChange={(value: string) => onCellChange(timeSlot, group, (value === "---" ? null : value as ClassroomType))}
+              onValueChange={(value: string) =>
+                onCellChange(timeSlot, group, value === "---" ? null : (value as ClassroomType))
+              }
               disabled={!isSpecialTimeSlot && !isAdminView}
             >
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full text-xs sm:text-sm">
                 <SelectValue placeholder="選択" />
               </SelectTrigger>
               <SelectContent>
@@ -336,32 +245,40 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </SelectContent>
             </Select>
             {classroom && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-full text-xs"
-                onClick={() => handleCommentEdit(timeSlot, group)}
-              >
-                {hasComment ? "コメント編集" : "コメント追加"}
-              </Button>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1 text-xs sm:text-sm"
+                  onClick={() => handleCommentEdit(timeSlot, group)}
+                >
+                  {hasComment ? "コメント編集" : "コメント追加"}
+                </Button>
+              </div>
+            )}
+            {hasComment && comment && (
+              <p className="text-left text-[11px] text-green-700 sm:text-xs">{comment.comment}</p>
             )}
           </div>
         ) : (
-          <>
+          <div className="space-y-1">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <span className={`${hasComment ? "text-green-700 font-bold" : "text-gray-700 font-medium"} text-[6px] sm:text-base break-words whitespace-pre-line hyphens-auto`}>
-              {classroom || "---"}
-              {hasComment && <span className="ml-1 text-green-400">※</span>}
-            </span>
-          </>
+            <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"}`}>
+              <span className="block text-sm sm:text-base break-words whitespace-pre-line hyphens-auto">
+                {classroom || "---"}
+              </span>
+            </div>
+            {hasComment && (
+              <div className="text-[11px] text-green-600 sm:text-xs">コメントあり（タップで表示）</div>
+            )}
+          </div>
         )}
       </TableCell>
     );
-  }
+  };
 
   return (
-  <div className="w-full space-y-8">
-      {/* コメントモーダル */}
+    <div className="w-full space-y-8 font-sans">
       {activeComment && (
         <CommentModal
           isOpen={modalOpen}
@@ -373,98 +290,74 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         />
       )}
 
-      {/* モバイル表示 */}
-      <div className="sm:hidden space-y-6 font-sans">
-        {renderMobileSection("昼間部", regularTimeSlotsOrder, regularClassGroups)}
-        {renderMobileSection("夜間部", nursingTimeSlotsOrder, nursingClassGroups)}
-      </div>
-
-      {/* デスクトップ表示 */}
-      <div className="hidden sm:block space-y-8">
-        {/* 昼間部テーブル */}
-        <div className="w-full font-sans">
+      <div className="space-y-8">
         <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
-          <div className="bg-gray-100 text-gray-800 font-bold text-center py-4 text-xl tracking-wide border-b border-gray-300">昼間部</div>
-          <div className="overflow-x-auto w-full min-w-0">
-            <Table className="w-full min-w-0 border-collapse table-fixed text-xs sm:text-[clamp(0.7rem,1vw,1.1rem)]">
+          <div className="bg-gray-100 text-gray-800 font-bold text-center py-3 sm:py-4 text-lg sm:text-xl tracking-wide border-b border-gray-300">昼間部</div>
+          <div className="overflow-x-auto">
+            <Table className="w-full border-collapse table-fixed text-xs sm:text-sm">
               <TableHeader>
                 <TableRow className="bg-gray-100">
-                  <TableHead className="border border-gray-300 bg-gray-100 p-1 sm:p-3 text-center font-bold text-gray-700 w-full sm:whitespace-nowrap sm:w-[90px] sm:min-w-[70px] sm:max-w-[110px] text-[10px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal">
+                  <TableHead className="border border-gray-300 bg-gray-100 px-2 py-3 sm:px-3 text-center font-bold text-gray-700 text-xs sm:text-sm min-w-[80px]">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-gray-300 bg-gray-100 p-1 sm:p-3 text-center font-bold text-gray-700 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[10px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal"
+                      className="border border-gray-300 bg-gray-100 px-2 py-3 sm:px-3 text-center font-bold text-gray-700 text-xs sm:text-sm min-w-[120px]"
                     >
-                      <div className="truncate">{group}</div>
+                      <div className="truncate" title={group}>
+                        {group}
+                      </div>
                     </TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {regularTimeSlotsOrder.map((timeSlot) => (
-                  <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
-                    <TableCell className="border border-gray-300 bg-white p-1 sm:p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[24px] sm:min-w-[18px] sm:max-w-[24px] overflow-hidden text-[10px] break-all whitespace-normal">
-                      {timeSlot === "自　習" ? (
-                        <span className="text-[4px] sm:text-base font-semibold text-center block">
-                          <span className="sm:hidden">マイスタ</span>
-                          <span className="hidden sm:inline">マイスタディ</span>
-                        </span>
-                      ) : <span className="text-[9px] sm:text-base font-semibold">{timeSlot}</span>}
+                  <TableRow key={timeSlot} className="hover:bg-gray-100">
+                    <TableCell className="border border-gray-300 bg-white px-2 py-3 sm:px-3 text-center font-semibold text-gray-800 text-xs sm:text-sm min-w-[80px]">
+                      {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
                     </TableCell>
-                    {regularClassGroups.map((group) =>
-                      React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
-                        className: `border border-gray-300 p-1 sm:p-3 text-center align-middle w-full sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[10px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200 break-all whitespace-normal` +
-                          (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className.replace(/rounded-[a-z0-9]+|rounded-xl|rounded-2xl|rounded|bg-pink-[0-9]+|bg-pink|text-pink-[0-9]+|text-pink|border-pink-[0-9]+|border-pink|bg-orange-[0-9]+|bg-orange|text-orange-[0-9]+|text-orange|border-orange-[0-9]+|border-orange|bg-purple-[0-9]+|bg-purple|text-purple-[0-9]+|text-purple|border-purple-[0-9]+|border-purple/g, "")}` : "")
-                      })
-                    )}
+                    {regularClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
         </div>
-      </div>
 
-        {/* 夜間部テーブル */}
-        <div className="w-full font-sans">
-          <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
-            <div className="bg-gray-100 text-gray-800 font-bold text-center py-4 text-xl tracking-wide border-b border-gray-300">夜間部</div>
-            <div className="overflow-x-auto w-full min-w-0">
-              <Table className="w-full min-w-0 border-collapse table-fixed text-[clamp(0.7rem,1vw,1.1rem)]">
-                <TableHeader>
-                  <TableRow className="bg-gray-100">
-                    <TableHead className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal">
-                      時限
+        <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
+          <div className="bg-gray-100 text-gray-800 font-bold text-center py-3 sm:py-4 text-lg sm:text-xl tracking-wide border-b border-gray-300">夜間部</div>
+          <div className="overflow-x-auto">
+            <Table className="w-full border-collapse table-fixed text-xs sm:text-sm">
+              <TableHeader>
+                <TableRow className="bg-gray-100">
+                  <TableHead className="border border-gray-300 bg-gray-100 px-2 py-3 sm:px-3 text-center font-bold text-gray-700 text-xs sm:text-sm min-w-[120px]">
+                    時限
+                  </TableHead>
+                  {nursingClassGroups.map((group) => (
+                    <TableHead
+                      key={group}
+                      className="border border-gray-300 bg-gray-100 px-2 py-3 sm:px-3 text-center font-bold text-gray-700 text-xs sm:text-sm min-w-[140px]"
+                    >
+                      <div className="truncate" title={group}>
+                        {group}
+                      </div>
                     </TableHead>
-                    {nursingClassGroups.map((group) => (
-                      <TableHead
-                        key={group}
-                        className="border border-gray-300 bg-gray-100 p-3 text-center font-bold text-gray-700 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal"
-                      >
-                        <div className="truncate">{group}</div>
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {nursingTimeSlotsOrder.map((timeSlot) => (
-                    <TableRow key={timeSlot} className="hover:bg-gray-200 transition-all duration-150">
-                      <TableCell className="border border-gray-300 bg-white p-3 text-center font-semibold text-gray-800 w-full sm:whitespace-nowrap sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] break-all whitespace-normal">
-                        {timeSlot === "マイスタ（午前）" ? <span><span className="sm:hidden">マイスタ午前</span><span className="hidden sm:inline">マイスタ（午前）</span></span> : timeSlot === "マイスタ（午後）" ? <span><span className="sm:hidden">マイスタ午後</span><span className="hidden sm:inline">マイスタ（午後）</span></span> : timeSlot}
-                      </TableCell>
-                      {nursingClassGroups.map((group) =>
-                        React.cloneElement(renderCell(timeSlot as TimeSlot, group), {
-                          className: `border border-gray-300 p-3 text-center align-middle w-full sm:w-[140px] sm:min-w-[100px] sm:max-w-[160px] text-[12px] sm:text-[clamp(1rem,1.5vw,1.3rem)] font-medium bg-white transition-all duration-200 break-all whitespace-normal` +
-                            (renderCell(timeSlot as TimeSlot, group).props.className ? ` ${renderCell(timeSlot as TimeSlot, group).props.className.replace(/rounded-[a-z0-9]+|rounded-xl|rounded-2xl|rounded|bg-pink-[0-9]+|bg-pink|text-pink-[0-9]+|text-pink|border-pink-[0-9]+|border-pink|bg-orange-[0-9]+|bg-orange|text-orange-[0-9]+|text-orange|border-orange-[0-9]+|border-orange|bg-purple-[0-9]+|bg-purple|text-purple-[0-9]+|text-purple|border-purple-[0-9]+|border-purple/g, "")}` : "")
-                        })
-                      )}
-                    </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            </div>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {nursingTimeSlotsOrder.map((timeSlot) => (
+                  <TableRow key={timeSlot} className="hover:bg-gray-100">
+                    <TableCell className="border border-gray-300 bg-white px-2 py-3 sm:px-3 text-center font-semibold text-gray-800 text-xs sm:text-sm min-w-[120px]">
+                      {timeSlot}
+                    </TableCell>
+                    {nursingClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>
