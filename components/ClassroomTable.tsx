@@ -124,6 +124,31 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   const findComment = (timeSlot: string, group: string) =>
     comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
+  const getDynamicFontClass = (text: string | null | undefined) => {
+    if (!text || text === "---") {
+      return "text-sm sm:text-base";
+    }
+
+    const normalizedLength = text.replace(/\s+/g, "").length;
+
+    if (normalizedLength <= 6) {
+      return "text-base sm:text-lg";
+    }
+    if (normalizedLength <= 10) {
+      return "text-sm sm:text-base";
+    }
+    if (normalizedLength <= 14) {
+      return "text-[13px] sm:text-sm";
+    }
+    if (normalizedLength <= 18) {
+      return "text-[12px] sm:text-[13px]";
+    }
+    if (normalizedLength <= 24) {
+      return "text-[11px] sm:text-xs";
+    }
+    return "text-[10px] sm:text-[11px]";
+  };
+
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
     if (!isAdminView && classroom) {
       const commentItem = findComment(timeSlot, group);
@@ -183,7 +208,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         >
           <div className="space-y-2">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
-            <div className="font-semibold text-green-700 text-sm sm:text-base">{classroom || "---"}</div>
+            <div className={`font-semibold text-green-700 ${getDynamicFontClass(classroom)} whitespace-nowrap leading-tight`}>{classroom || "---"}</div>
             <Textarea
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
@@ -264,7 +289,10 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
           <div className="space-y-1">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"}`}>
-              <span className="block text-sm sm:text-base break-words whitespace-pre-line hyphens-auto">
+              <span
+                className={`block ${getDynamicFontClass(classroom)} whitespace-nowrap leading-tight`}
+                title={classroom || "---"}
+              >
                 {classroom || "---"}
               </span>
             </div>
