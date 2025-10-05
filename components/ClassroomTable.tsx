@@ -124,9 +124,35 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   const findComment = (timeSlot: string, group: string) =>
     comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
-  const getDynamicFontStyle = (): React.CSSProperties => ({
-    fontSize: "clamp(0.62rem, 1.9vw, 0.85rem)",
-  });
+  const getDynamicFontStyle = (text: string | null | undefined): React.CSSProperties => {
+    const cleaned = (text ?? "").replace(/\s+/g, "");
+    const length = cleaned.length;
+
+    if (length === 0) {
+      return { fontSize: "clamp(0.72rem, 2.6vw, 0.98rem)" };
+    }
+
+    if (length <= 6) {
+      return { fontSize: "clamp(0.95rem, 3.6vw, 1.28rem)" };
+    }
+    if (length <= 10) {
+      return { fontSize: "clamp(0.9rem, 3.2vw, 1.15rem)" };
+    }
+    if (length <= 14) {
+      return { fontSize: "clamp(0.85rem, 3vw, 1.08rem)" };
+    }
+    if (length <= 20) {
+      return { fontSize: "clamp(0.8rem, 2.7vw, 1.02rem)" };
+    }
+    if (length <= 26) {
+      return { fontSize: "clamp(0.75rem, 2.4vw, 0.96rem)" };
+    }
+    if (length <= 32) {
+      return { fontSize: "clamp(0.7rem, 2.2vw, 0.9rem)" };
+    }
+
+    return { fontSize: "clamp(0.66rem, 2vw, 0.86rem)" };
+  };
 
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
     if (!isAdminView && classroom) {
@@ -189,7 +215,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <div
               className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight text-center"
-              style={getDynamicFontStyle()}
+              style={getDynamicFontStyle(classroom)}
             >
               {classroom || "---"}
             </div>
@@ -276,7 +302,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               <span
                 className="block whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
-                style={getDynamicFontStyle()}
+                style={getDynamicFontStyle(classroom)}
               >
                 {classroom || "---"}
               </span>
