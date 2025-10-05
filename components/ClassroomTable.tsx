@@ -124,30 +124,9 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   const findComment = (timeSlot: string, group: string) =>
     comments.find((commentItem) => commentItem.time_slot === timeSlot && commentItem.class_group === group);
 
-  const getDynamicFontStyle = (text: string | null | undefined): React.CSSProperties => {
-    if (!text || text === "---") {
-      return { fontSize: "clamp(0.7rem, 2.5vw, 0.95rem)" };
-    }
-
-    const normalizedLength = text.replace(/\s+/g, "").length;
-
-    if (normalizedLength <= 6) {
-      return { fontSize: "clamp(0.9rem, 3.4vw, 1.25rem)" };
-    }
-    if (normalizedLength <= 10) {
-      return { fontSize: "clamp(0.85rem, 3vw, 1.1rem)" };
-    }
-    if (normalizedLength <= 14) {
-      return { fontSize: "clamp(0.8rem, 2.7vw, 1.05rem)" };
-    }
-    if (normalizedLength <= 18) {
-      return { fontSize: "clamp(0.75rem, 2.4vw, 0.98rem)" };
-    }
-    if (normalizedLength <= 24) {
-      return { fontSize: "clamp(0.7rem, 2.2vw, 0.92rem)" };
-    }
-    return { fontSize: "clamp(0.62rem, 1.9vw, 0.85rem)" };
-  };
+  const getDynamicFontStyle = (): React.CSSProperties => ({
+    fontSize: "clamp(0.62rem, 1.9vw, 0.85rem)",
+  });
 
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
     if (!isAdminView && classroom) {
@@ -210,7 +189,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} />
             <div
               className="font-semibold text-green-700 whitespace-nowrap leading-tight tracking-tight"
-              style={getDynamicFontStyle(classroom)}
+              style={getDynamicFontStyle()}
             >
               {classroom || "---"}
             </div>
@@ -297,7 +276,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               <span
                 className="block whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
-                style={getDynamicFontStyle(classroom)}
+                style={getDynamicFontStyle()}
               >
                 {classroom || "---"}
               </span>
