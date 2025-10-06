@@ -36,7 +36,7 @@ export const LectureInfoCell: React.FC<LectureInfoCellProps> = ({ lectureName, t
     <div className="mt-1 leading-tight text-center text-gray-700 space-y-1">
       {lectureName && (
         <div
-          className="font-semibold whitespace-normal sm:whitespace-nowrap"
+          className="whitespace-normal sm:whitespace-nowrap"
           style={isMobile ? { fontSize: "0.75rem" } : getLectureFontStyle(lectureName)}
         >
           {lectureName === "マイスタディ" ? (
