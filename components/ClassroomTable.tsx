@@ -271,8 +271,11 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       );
     }
 
+    const hasLectureInfo = !!(lectureName || teacherName);
+    const alignClass = hasLectureInfo || isAdminView ? "align-top" : "align-middle";
+    
     const className = [
-      "border border-gray-300 align-top bg-white px-1 py-1 sm:px-3 sm:py-4 text-center text-[10px] sm:text-sm transition-colors duration-150",
+      `border border-gray-300 ${alignClass} bg-white px-1 py-1 sm:px-3 sm:py-4 text-center text-[10px] sm:text-sm transition-colors duration-150`,
       !isAdminView && hasComment ? "cursor-pointer" : "",
     ]
       .filter(Boolean)
@@ -324,7 +327,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
             )}
           </div>
         ) : (
-          <div className="space-y-1 text-center">
+          <div className={`text-center ${lectureName || teacherName ? "space-y-1" : "flex items-center justify-center h-full"}`}>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
             <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"} text-center`}>
               <span
