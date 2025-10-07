@@ -51,21 +51,21 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
   }
 
   return (
-  <div className="container mx-auto py-6 px-2 sm:py-12 sm:px-6 bg-gray-50 min-h-[80vh] font-sans">
+  <div className="container mx-auto py-3 px-2 sm:py-12 sm:px-6 bg-gray-50 min-h-[80vh] font-sans">
       {/* ヘッダー部分 - タイトルを左に、日付選択を右に配置 */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-10">
-        <div className="flex items-center mb-4 sm:mb-0">
-          <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-12 w-auto mr-3" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-wide">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-10">
+        <div className="flex items-center mb-2 sm:mb-0">
+          <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-8 sm:h-12 w-auto mr-2 sm:mr-3" />
+          <h1 className="text-lg sm:text-3xl font-bold text-gray-800 tracking-wide">
             <span className="text-gray-700">ELT</span> <span className="text-gray-500">本日の教室</span>
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 sm:gap-3">
           <Button
             onClick={handlePrevDayClick}
             variant="outline"
-            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none"
+            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
           >
             前の日
           </Button>
@@ -73,7 +73,7 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           <Button
             onClick={handleTodayClick}
             variant="outline"
-            className="bg-gray-700 hover:bg-gray-800 border border-gray-700 text-white font-bold px-4 py-2 shadow-none rounded-none"
+            className="bg-gray-700 hover:bg-gray-800 border border-gray-700 text-white font-bold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
             disabled={isToday(selectedDate)}
           >
             今日
@@ -81,7 +81,7 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           <Button
             onClick={handleNextDayClick}
             variant="outline"
-            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none"
+            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
           >
             次の日
           </Button>
@@ -89,11 +89,11 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
       </div>
 
       {isLoading ? (
-        <div className="text-center py-6 text-lg text-gray-500 font-semibold animate-pulse">データを読み込んでいます...</div>
+        <div className="text-center py-4 sm:py-6 text-sm sm:text-lg text-gray-500 font-semibold animate-pulse">データを読み込んでいます...</div>
       ) : error ? (
-        <div className="text-center py-6 text-lg text-red-500 font-semibold">{error}</div>
+        <div className="text-center py-4 sm:py-6 text-sm sm:text-lg text-red-500 font-semibold">{error}</div>
       ) : (
-        <div className="bg-white border border-gray-200 p-4 sm:p-8">
+        <div className="bg-white border border-gray-200 p-2 sm:p-8">
           <ClassroomTable
             data={dailyData}
             isAdminView={false}

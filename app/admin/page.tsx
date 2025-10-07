@@ -257,15 +257,15 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto py-8 max-w-md">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-pink-600 tracking-wide">
+      <div className="container mx-auto py-4 sm:py-8 max-w-md px-4">
+        <div className="text-center mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-3xl font-bold text-pink-600 tracking-wide">
             ELT <span className="text-pink-800">教室管理</span>
           </h1>
         </div>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <div className="space-y-4 bg-pink-50 p-6 rounded-2xl shadow-md border-2 border-pink-200">
-          <h1 className="text-2xl font-bold text-center text-pink-700">教室管理ログイン</h1>
+        {error && <div className="text-red-500 mb-4 text-sm sm:text-base">{error}</div>}
+        <div className="space-y-4 bg-pink-50 p-4 sm:p-6 rounded-2xl shadow-md border-2 border-pink-200">
+          <h1 className="text-lg sm:text-2xl font-bold text-center text-pink-700">教室管理ログイン</h1>
           <div className="space-y-2">
             <Label htmlFor="email">メールアドレス</Label>
             <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -295,23 +295,23 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto py-4 px-2 sm:py-8 sm:px-4">
+    <div className="container mx-auto py-2 px-2 sm:py-8 sm:px-4">
       {/* ヘッダー部分 - タイトルを左に、日付選択を右に配置 */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-pink-600 tracking-wide mb-4 sm:mb-0">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8">
+        <h1 className="text-lg sm:text-3xl font-bold text-pink-600 tracking-wide mb-2 sm:mb-0">
           ELT <span className="text-pink-800">教室管理</span>
         </h1>
 
         <div className="flex items-center gap-2">
           <DatePicker date={selectedDate} onSelect={handleDateChange} />
-          <p className="text-sm font-medium text-pink-700 hidden sm:block">
+          <p className="text-xs sm:text-sm font-medium text-pink-700 hidden sm:block">
             {format(selectedDate, "yyyy年M月d日（E）", { locale: ja })}
           </p>
         </div>
       </div>
 
-      <div className="mb-6 flex justify-center">
-        <Button onClick={handleSave} disabled={isLoading} variant="default" className="bg-pink-500 hover:bg-pink-600">
+      <div className="mb-4 sm:mb-6 flex justify-center">
+        <Button onClick={handleSave} disabled={isLoading} variant="default" className="bg-pink-500 hover:bg-pink-600 text-xs sm:text-base px-3 py-1 sm:px-4 sm:py-2">
           {isLoading ? "保存中..." : "変更を保存"}
         </Button>
       </div>

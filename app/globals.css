@@ -74,6 +74,19 @@
     @apply bg-background text-foreground;
     font-family: system-ui, sans-serif;
   }
+  
+  /* スマホ向けのベースフォントサイズを縮小 */
+  @media (max-width: 639px) {
+    html {
+      font-size: 12px; /* デフォルトの16pxから12pxに縮小 */
+    }
+  }
+  
+  @media (min-width: 640px) {
+    html {
+      font-size: 16px; /* タブレット・PC向けは標準サイズ */
+    }
+  }
 }
 
 /* かわいいスタイルの追加 */
