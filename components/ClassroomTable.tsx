@@ -386,7 +386,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
                 {regularTimeSlotsOrder.map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-gray-100">
                     <TableCell className="border border-gray-300 bg-white px-1 py-1 sm:px-3 sm:py-3 text-center font-semibold text-gray-800 text-[10px] sm:text-sm min-w-[60px] sm:min-w-[80px]">
-                      {timeSlot === "自　習" ? "マイスタディ" : timeSlot}
+                      {timeSlot === "自　習" ? "マイスタ" : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
                   </TableRow>
