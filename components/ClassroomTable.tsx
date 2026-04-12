@@ -149,7 +149,20 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
 
   const getDynamicFontStyle = (text: string | null | undefined): React.CSSProperties => {
     if (isMobile) {
-      return { fontSize: "0.7rem" };
+      const cleaned = (text ?? "").replace(/\s+/g, "")
+      const length = cleaned.length
+
+      if (length <= 4) {
+        return { fontSize: "0.54rem", lineHeight: 1.05 }
+      }
+      if (length <= 8) {
+        return { fontSize: "0.5rem", lineHeight: 1.05 }
+      }
+      if (length <= 12) {
+        return { fontSize: "0.46rem", lineHeight: 1.05 }
+      }
+
+      return { fontSize: "0.42rem", lineHeight: 1.05 }
     }
 
     const cleaned = (text ?? "").replace(/\s+/g, "");
@@ -363,17 +376,17 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       <div className="space-y-5 sm:space-y-6">
         <div className="surface-card overflow-hidden">
           <div className="bg-slate-800 px-4 py-3 text-center text-sm font-bold tracking-wide text-white sm:px-6 sm:py-4 sm:text-xl">昼間部</div>
-          <div className="data-table-shell rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
-            <Table className="min-w-[860px] border-collapse table-fixed text-[10px] sm:text-sm">
+          <div className="data-table-shell mobile-table-fit rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
+            <Table className="w-full border-collapse table-fixed text-[9px] sm:text-sm">
               <TableHeader>
                 <TableRow className="bg-amber-50/80 hover:bg-amber-50/80">
-                  <TableHead className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[60px] sm:min-w-[80px]">
+                  <TableHead className="border border-amber-100 bg-amber-50/80 px-0.5 py-1 text-center text-[8px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm w-[13%] sm:w-auto">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]"
+                      className="border border-amber-100 bg-amber-50/80 px-0.5 py-1 text-center text-[8px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm w-[12.4%] sm:w-auto"
                     >
                       <div className="mobile-ellipsis" title={group}>
                         {group}
@@ -385,7 +398,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               <TableBody>
                 {regularTimeSlotsOrder.map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-amber-50/40">
-                    <TableCell className="border border-amber-100 bg-white px-1 py-2 text-center text-[10px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm min-w-[60px] sm:min-w-[80px]">
+                    <TableCell className="border border-amber-100 bg-white px-0.5 py-1 text-center text-[7px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm w-[13%] sm:w-auto">
                       {timeSlot === "自　習" ? "マイスタ" : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
@@ -398,17 +411,17 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
 
         <div className="surface-card overflow-hidden">
           <div className="bg-slate-800 px-4 py-3 text-center text-sm font-bold tracking-wide text-white sm:px-6 sm:py-4 sm:text-xl">夜間部</div>
-          <div className="data-table-shell rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
-            <Table className="min-w-[980px] border-collapse table-fixed text-[10px] sm:text-sm">
+          <div className="data-table-shell mobile-table-fit rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
+            <Table className="w-full border-collapse table-fixed text-[9px] sm:text-sm">
               <TableHeader>
                 <TableRow className="bg-amber-50/80 hover:bg-amber-50/80">
-                  <TableHead className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]">
+                  <TableHead className="border border-amber-100 bg-amber-50/80 px-0.5 py-1 text-center text-[8px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm w-[24%] sm:w-auto">
                     時限
                   </TableHead>
                   {nursingClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[100px] sm:min-w-[140px]"
+                      className="border border-amber-100 bg-amber-50/80 px-0.5 py-1 text-center text-[8px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm w-[25.33%] sm:w-auto"
                     >
                       <div className="mobile-ellipsis" title={group}>
                         {group}
@@ -420,7 +433,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               <TableBody>
                 {nursingTimeSlotsOrder.map((timeSlot) => (
                   <TableRow key={timeSlot} className="hover:bg-amber-50/40">
-                    <TableCell className="border border-amber-100 bg-white px-1 py-2 text-center text-[10px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]">
+                    <TableCell className="border border-amber-100 bg-white px-0.5 py-1 text-center text-[7px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm w-[24%] sm:w-auto">
                       {timeSlot}
                     </TableCell>
                     {nursingClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}

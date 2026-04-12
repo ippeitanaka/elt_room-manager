@@ -70,6 +70,12 @@
   }
 
   @media (max-width: 639px) {
+    html,
+    body,
+    body * {
+      font-family: "UD BIZ Gothic", "BIZ UDGothic", "BIZ UDPGothic", sans-serif !important;
+    }
+
     body {
       line-height: 1.45;
     }
@@ -113,5 +119,27 @@
 
   .mobile-ellipsis {
     @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  @media (max-width: 639px) {
+    .mobile-table-fit {
+      overflow-x: visible;
+    }
+
+    .mobile-table-fit > div {
+      overflow: visible;
+    }
+
+    .mobile-table-fit table {
+      width: 100% !important;
+      table-layout: fixed;
+    }
+
+    .mobile-table-fit th,
+    .mobile-table-fit td {
+      padding-left: 0.125rem !important;
+      padding-right: 0.125rem !important;
+      word-break: keep-all;
+    }
   }
 }

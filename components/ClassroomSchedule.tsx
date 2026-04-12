@@ -60,7 +60,6 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.24em] text-amber-200/90">ELT ROOM MANAGER</p>
               <h1 className="text-2xl font-bold text-white sm:text-4xl">本日の教室案内</h1>
-              <p className="mt-1 text-xs text-slate-300 sm:text-sm">白ベースと暖色アクセントで再構成した月間カレンダー基調の表示です。</p>
             </div>
           </div>
 
@@ -92,11 +91,6 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
               次の日
             </Button>
           </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-200 sm:text-sm">
-          <span className="rounded-full bg-white/10 px-3 py-1.5">日付を切り替えて教室配置を確認</span>
-          <span className="rounded-full bg-white/10 px-3 py-1.5">スマホでは文字を縮小し横スクロール優先</span>
         </div>
       </div>
       </div>
