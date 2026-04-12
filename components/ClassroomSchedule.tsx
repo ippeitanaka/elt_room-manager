@@ -52,7 +52,8 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
 
   return (
     <div className="page-shell min-h-screen">
-      <div className="hero-panel mb-4 sm:mb-6">
+      <div className="sticky top-0 z-40 mb-4 pt-2 sm:mb-6 sm:pt-3">
+        <div className="hero-panel border border-slate-700/60 bg-slate-800/95 backdrop-blur supports-[backdrop-filter]:bg-slate-800/88">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-3">
             <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-12 w-auto sm:h-14" />
@@ -97,6 +98,7 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           <span className="rounded-full bg-white/10 px-3 py-1.5">日付を切り替えて教室配置を確認</span>
           <span className="rounded-full bg-white/10 px-3 py-1.5">スマホでは文字を縮小し横スクロール優先</span>
         </div>
+      </div>
       </div>
 
       {isLoading ? (
