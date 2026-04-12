@@ -257,75 +257,85 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto py-4 sm:py-8 max-w-md px-4">
-        <div className="text-center mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-3xl font-bold text-pink-600 tracking-wide">
-            ELT <span className="text-pink-800">教室管理</span>
-          </h1>
-        </div>
-        {error && <div className="text-red-500 mb-4 text-sm sm:text-base">{error}</div>}
-        <div className="space-y-4 bg-pink-50 p-4 sm:p-6 rounded-2xl shadow-md border-2 border-pink-200">
-          <h1 className="text-lg sm:text-2xl font-bold text-center text-pink-700">教室管理ログイン</h1>
-          <div className="space-y-2">
-            <Label htmlFor="email">メールアドレス</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <div className="page-shell flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-md space-y-5">
+          <div className="hero-panel text-center">
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-amber-200/90">ADMIN PANEL</p>
+            <h1 className="mt-2 text-2xl font-bold text-white sm:text-3xl">教室管理ログイン</h1>
+            <p className="mt-2 text-sm text-slate-300">運用機能は維持したまま、共通UIのみ統一しています。</p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">パスワード</Label>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          {error && <div className="surface-card px-4 py-3 text-sm text-red-500 sm:text-base">{error}</div>}
+          <div className="surface-card space-y-4 p-5 sm:p-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">メールアドレス</Label>
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">パスワード</Label>
+              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <Button onClick={handleLogin} disabled={isLoading} className="w-full bg-slate-800 hover:bg-slate-700">
+              {isLoading ? "ログイン中..." : "ログイン"}
+            </Button>
           </div>
-          <Button onClick={handleLogin} disabled={isLoading} className="w-full bg-pink-500 hover:bg-pink-600">
-            {isLoading ? "ログイン中..." : "ログイン"}
-          </Button>
         </div>
       </div>
     )
   }
 
   if (isLoading && !dailyData) {
-    return <div className="container mx-auto py-8 text-center">データを読み込んでいます...</div>
+    return <div className="page-shell"><div className="surface-card px-4 py-8 text-center">データを読み込んでいます...</div></div>
   }
 
   if (error && !dailyData) {
-    return <div className="container mx-auto py-8 text-center text-red-500">エラー: {error}</div>
+    return <div className="page-shell"><div className="surface-card px-4 py-8 text-center text-red-500">エラー: {error}</div></div>
   }
 
   if (!dailyData) {
-    return <div className="container mx-auto py-8 text-center">データがありません。</div>
+    return <div className="page-shell"><div className="surface-card px-4 py-8 text-center">データがありません。</div></div>
   }
 
   return (
-    <div className="container mx-auto py-2 px-2 sm:py-8 sm:px-4">
-      {/* ヘッダー部分 - タイトルを左に、日付選択を右に配置 */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8">
-        <h1 className="text-lg sm:text-3xl font-bold text-pink-600 tracking-wide mb-2 sm:mb-0">
-          ELT <span className="text-pink-800">教室管理</span>
-        </h1>
+    <div className="page-shell min-h-screen">
+      <div className="hero-panel mb-4 sm:mb-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.24em] text-amber-200/90">ADMIN PANEL</p>
+            <h1 className="mt-2 text-2xl font-bold text-white sm:text-4xl">教室管理</h1>
+            <p className="mt-1 text-sm text-slate-300">日付別の教室割り当てとコメントを、同一デザインルールで編集できます。</p>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <DatePicker date={selectedDate} onSelect={handleDateChange} />
-          <p className="text-xs sm:text-sm font-medium text-pink-700 hidden sm:block">
-            {format(selectedDate, "yyyy年M月d日（E）", { locale: ja })}
-          </p>
+          <div className="surface-subtle flex flex-wrap items-center gap-2 p-2 sm:gap-3 sm:p-3">
+            <DatePicker date={selectedDate} onSelect={handleDateChange} />
+            <p className="rounded-full bg-white px-3 py-2 text-[0.7rem] font-medium text-slate-600 sm:text-sm">
+              {format(selectedDate, "yyyy年M月d日（E）", { locale: ja })}
+            </p>
+            <Button onClick={handleSave} disabled={isLoading} variant="default" className="bg-amber-500 text-white hover:bg-amber-600">
+              {isLoading ? "保存中..." : "変更を保存"}
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="mb-4 sm:mb-6 flex justify-center">
-        <Button onClick={handleSave} disabled={isLoading} variant="default" className="bg-pink-500 hover:bg-pink-600 text-xs sm:text-base px-3 py-1 sm:px-4 sm:py-2">
-          {isLoading ? "保存中..." : "変更を保存"}
-        </Button>
-      </div>
+      {error && dailyData && <div className="surface-card mb-4 px-4 py-3 text-sm text-red-500 sm:text-base">{error}</div>}
 
-      <ClassroomTable
-        data={dailyData}
-        onCellChange={handleCellChange}
-        isAdminView={true}
-        comments={comments}
-        onCommentChange={handleCommentChange}
-        onCommentDelete={handleCommentDelete}
-        lectureInfos={lectureInfos}
-        classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
-      />
+      <div className="surface-card p-3 sm:p-6">
+        <div className="mb-4 flex items-center justify-between gap-3 px-1 sm:mb-5">
+          <p className="text-sm font-semibold text-slate-700 sm:text-base">教室配置の編集</p>
+          <p className="text-[0.7rem] text-slate-400 sm:text-sm">モバイルでは横スクロール優先で表示します。</p>
+        </div>
+
+        <ClassroomTable
+          data={dailyData}
+          onCellChange={handleCellChange}
+          isAdminView={true}
+          comments={comments}
+          onCommentChange={handleCommentChange}
+          onCommentDelete={handleCommentDelete}
+          lectureInfos={lectureInfos}
+          classroomOptions={["---", "1F実習室", "2F実習室", "3F実習室", "3F小教室", "4F小教室", "4F大教室", "5F大教室", "7F大教室", "パソコン室", "DT3階小教室", "DT4階小教室"]}
+        />
+      </div>
     </div>
   )
 }

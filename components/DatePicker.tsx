@@ -24,16 +24,16 @@ export function DatePicker({ date, onSelect }: DatePickerProps) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-auto justify-end text-right font-bold px-2 py-1 sm:px-4 sm:py-2 text-gray-700 border border-gray-300 bg-white rounded-none text-xs sm:text-base"
+          className="min-w-[10.5rem] justify-between gap-2 rounded-full border-amber-200 bg-white px-3 py-2 text-left text-xs font-semibold text-slate-700 shadow-sm sm:min-w-[13rem] sm:px-4 sm:text-sm"
           aria-label="日付を選択"
         >
-          <CalendarIcon className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
-          <span className="text-gray-700 font-bold">
+          <CalendarIcon className="h-3.5 w-3.5 text-amber-600 sm:h-4 sm:w-4" />
+          <span className="truncate">
             {date ? format(date, "yyyy年M月d日（E）", { locale: jaMonday }) : "日付を選択"}
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto border-none bg-transparent p-0 shadow-none" align="start">
         <Calendar
           mode="single"
           selected={date}

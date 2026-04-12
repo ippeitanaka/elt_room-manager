@@ -4,65 +4,35 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 32 60% 98%;
+    --foreground: 218 29% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 218 29% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 218 29% 18%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 214 31% 20%;
+    --primary-foreground: 40 60% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 34 70% 94%;
+    --secondary-foreground: 218 29% 22%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 35 45% 95%;
+    --muted-foreground: 215 15% 42%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 24 92% 61%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 28 33% 88%;
+    --input: 28 33% 88%;
+    --ring: 24 92% 61%;
 
-    --radius: 0.75rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --radius: 1.5rem;
   }
 }
 
@@ -70,54 +40,78 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-family: system-ui, sans-serif;
+
+  html {
+    font-size: clamp(13px, 3.5vw, 16px);
+    -webkit-text-size-adjust: 100%;
   }
-  
-  /* スマホ向けのベースフォントサイズを縮小 */
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "UD BIZ Gothic", "BIZ UDGothic", "Hiragino Kaku Gothic ProN", sans-serif;
+    background-image: radial-gradient(circle at top, rgba(251, 191, 36, 0.12), transparent 32%), linear-gradient(180deg, #fffdf8 0%, #fffaf2 100%);
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.02em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
   @media (max-width: 639px) {
-    html {
-      font-size: 12px; /* デフォルトの16pxから12pxに縮小 */
+    body {
+      line-height: 1.45;
     }
   }
-  
+
   @media (min-width: 640px) {
     html {
-      font-size: 16px; /* タブレット・PC向けは標準サイズ */
+      font-size: 16px;
     }
   }
 }
 
-/* かわいいスタイルの追加 */
-.btn,
-.button,
-button {
-  @apply rounded-full transition-all duration-300 hover:scale-105;
-}
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-7xl px-3 py-4 sm:px-6 sm:py-8;
+  }
 
-input,
-select {
-  @apply rounded-xl border-2 border-pink-200 focus:border-pink-400 focus:ring-pink-300;
-}
+  .hero-panel {
+    @apply rounded-[2rem] bg-slate-800/95 px-4 py-5 text-slate-50 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.6)] sm:px-7 sm:py-7;
+  }
 
-table {
-  @apply rounded-xl overflow-hidden border-2 border-pink-200;
-}
+  .surface-card {
+    @apply rounded-[1.75rem] border border-amber-100/80 bg-white/95 shadow-[0_20px_55px_-34px_rgba(15,23,42,0.38)];
+  }
 
-th {
-  @apply bg-pink-100 text-pink-800;
-}
+  .surface-subtle {
+    @apply rounded-[1.5rem] border border-amber-100 bg-amber-50/60;
+  }
 
-.bg-slate-100 {
-  @apply bg-pink-100;
-}
+  .pill-action {
+    @apply rounded-full border border-amber-200 bg-white text-slate-700 shadow-sm transition-colors hover:bg-amber-50;
+  }
 
-.bg-slate-50 {
-  @apply bg-pink-50;
-}
+  .data-table-shell {
+    @apply overflow-x-auto rounded-[1.5rem] border border-amber-100 bg-white shadow-[0_16px_40px_-30px_rgba(15,23,42,0.35)];
+  }
 
-/* アイコン用のカスタムフィルター */
-.icon-pink-filter {
-  filter: hue-rotate(270deg) saturate(150%) brightness(105%);
+  .mobile-tight-text {
+    font-size: clamp(0.62rem, 2.6vw, 0.78rem);
+  }
+
+  .mobile-ellipsis {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
 }

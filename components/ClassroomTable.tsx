@@ -21,14 +21,13 @@ function hashString(str: string): number {
 // HSLで色を生成（彩度・明度は固定、色相のみ分散）
 function getClassroomColorStyle(classroom: string): React.CSSProperties {
   if (!classroom || classroom === "---") return {};
-  // 個別指定: 5F大教室のみ色を変更
   if (classroom === "5F大教室") {
-    return { backgroundColor: "hsl(30, 70%, 85%)" };
+    return { backgroundColor: "hsl(35, 90%, 89%)" };
   }
   const hash = hashString(classroom);
-  const hue = hash % 360; // 0-359度で色相を分散
-  const saturation = 70; // 彩度
-  const lightness = 85; // 明度
+  const hue = hash % 360;
+  const saturation = 58;
+  const lightness = 92;
   return { backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)` };
 }
 import type { ClassroomComment } from "@/lib/comments"
@@ -60,14 +59,14 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     comment: string;
     timeSlot: string;
     classGroup: string;
-  } | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  } | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
   const [editingComment, setEditingComment] = useState<{
     timeSlot: TimeSlot;
     group: string;
     comment: string;
-  } | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  } | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -75,8 +74,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     const mediaQuery = window.matchMedia("(max-width: 639px)");
 
     const updateMatch = (event: MediaQueryListEvent | MediaQueryList) => {
-      setIsMobile(event.matches);
-    };
+      setIsMobile(event.matches)
+    }
 
     updateMatch(mediaQuery);
 
@@ -117,8 +116,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       hasComment,
       lectureName,
       teacherName,
-    };
-  };
+    }
+  }
 
   const regularTimeSlotsOrder: TimeSlot[] = [
     "1限目",
@@ -180,7 +179,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     }
 
     return { fontSize: "clamp(0.66rem, 2vw, 0.86rem)" };
-  };
+  }
 
   const handleCellClick = (timeSlot: TimeSlot, group: string, classroom: string | null) => {
     if (!isAdminView && classroom) {
@@ -236,14 +235,15 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
       return (
         <TableCell
           key={`${timeSlot}-${group}`}
-          className="border border-gray-300 align-top bg-white px-2 py-3 sm:px-3 sm:py-4 text-center text-xs sm:text-sm"
+          className="border border-amber-100 align-top bg-white px-1.5 py-2 text-center text-[10px] sm:px-3 sm:py-4 sm:text-sm"
           style={getClassroomColorStyle(classroom || "")}
         >
           <div className="space-y-2 text-center">
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
             <div
-              className="font-semibold text-green-700 whitespace-normal sm:whitespace-nowrap leading-tight tracking-tight text-center"
+              className="mobile-ellipsis font-semibold leading-tight tracking-tight text-center text-slate-800"
               style={getDynamicFontStyle(classroom)}
+              title={classroom || "---"}
             >
               {classroom || "---"}
             </div>
@@ -251,13 +251,13 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               value={editingComment.comment}
               onChange={(e) => setEditingComment({ ...editingComment, comment: e.target.value })}
               placeholder="コメントを入力"
-              className="min-h-[60px] sm:min-h-[80px] text-xs sm:text-base bg-green-50 border-green-200 focus:ring-2 focus:ring-green-200"
+              className="min-h-[60px] border-amber-200 bg-amber-50/70 text-xs sm:min-h-[80px] sm:text-sm"
             />
             <div className="flex flex-col items-center sm:flex-row sm:justify-center gap-2">
-              <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-green-500 text-white hover:bg-green-600">
+              <Button size="sm" onClick={handleCommentSave} className="flex-1 bg-amber-500 text-white hover:bg-amber-600">
                 保存
               </Button>
-              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1 border-green-300 text-green-700">
+              <Button size="sm" variant="outline" onClick={handleCommentCancel} className="flex-1 bg-white">
                 キャンセル
               </Button>
               {hasComment && (
@@ -275,7 +275,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
     const alignClass = hasLectureInfo || isAdminView ? "align-top" : "align-middle";
     
     const className = [
-      `border border-gray-300 ${alignClass} bg-white px-1 py-1 sm:px-3 sm:py-4 text-center text-[10px] sm:text-sm transition-colors duration-150`,
+      `border border-amber-100 ${alignClass} bg-white px-1 py-1.5 text-center text-[10px] transition-colors duration-150 sm:px-3 sm:py-4 sm:text-sm`,
       !isAdminView && hasComment ? "cursor-pointer" : "",
     ]
       .filter(Boolean)
@@ -323,15 +323,15 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </div>
             )}
             {hasComment && comment && (
-              <p className="text-center text-[9px] text-green-700 sm:text-xs">{comment.comment}</p>
+              <p className="mobile-ellipsis text-center text-[9px] text-amber-700 sm:text-xs" title={comment.comment}>{comment.comment}</p>
             )}
           </div>
         ) : (
           <div className={`text-center ${lectureName || teacherName ? "space-y-1" : "flex items-center justify-center h-full"}`}>
             <LectureInfoCell lectureName={lectureName} teacherName={teacherName} isMobile={isMobile} />
-            <div className={`font-medium ${classroom ? "text-gray-800" : "text-gray-400"} text-center`}>
+            <div className={`font-medium ${classroom ? "text-slate-800" : "text-slate-400"} text-center`}>
               <span
-                className="block whitespace-normal sm:whitespace-nowrap leading-tight tracking-tight"
+                className="mobile-ellipsis block whitespace-nowrap leading-tight tracking-tight"
                 title={classroom || "---"}
                 style={getDynamicFontStyle(classroom)}
               >
@@ -339,7 +339,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </span>
             </div>
             {hasComment && (
-              <div className="text-[9px] text-green-600 sm:text-xs text-center">コメントあり（タップで表示）</div>
+              <div className="text-[9px] text-amber-700 sm:text-xs text-center">コメントあり</div>
             )}
           </div>
         )}
@@ -348,7 +348,7 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
   };
 
   return (
-    <div className="w-full space-y-8 font-sans">
+    <div className="w-full space-y-5 sm:space-y-7">
       {activeComment && (
         <CommentModal
           isOpen={modalOpen}
@@ -360,22 +360,22 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
         />
       )}
 
-      <div className="space-y-8">
-        <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
-          <div className="bg-gray-100 text-gray-800 font-bold text-center py-2 sm:py-4 text-sm sm:text-xl tracking-wide border-b border-gray-300">昼間部</div>
-          <div className="overflow-x-auto">
-            <Table className="w-full border-collapse table-fixed text-[10px] sm:text-sm">
+      <div className="space-y-5 sm:space-y-6">
+        <div className="surface-card overflow-hidden">
+          <div className="bg-slate-800 px-4 py-3 text-center text-sm font-bold tracking-wide text-white sm:px-6 sm:py-4 sm:text-xl">昼間部</div>
+          <div className="data-table-shell rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
+            <Table className="min-w-[860px] border-collapse table-fixed text-[10px] sm:text-sm">
               <TableHeader>
-                <TableRow className="bg-gray-100">
-                  <TableHead className="border border-gray-300 bg-gray-100 px-1 py-1 sm:px-3 sm:py-3 text-center font-bold text-gray-700 text-[10px] sm:text-sm min-w-[60px] sm:min-w-[80px]">
+                <TableRow className="bg-amber-50/80 hover:bg-amber-50/80">
+                  <TableHead className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[60px] sm:min-w-[80px]">
                     時限
                   </TableHead>
                   {regularClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-gray-300 bg-gray-100 px-1 py-1 sm:px-3 sm:py-3 text-center font-bold text-gray-700 text-[10px] sm:text-sm min-w-[80px] sm:min-w-[120px]"
+                      className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]"
                     >
-                      <div className="truncate" title={group}>
+                      <div className="mobile-ellipsis" title={group}>
                         {group}
                       </div>
                     </TableHead>
@@ -384,8 +384,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </TableHeader>
               <TableBody>
                 {regularTimeSlotsOrder.map((timeSlot) => (
-                  <TableRow key={timeSlot} className="hover:bg-gray-100">
-                    <TableCell className="border border-gray-300 bg-white px-1 py-1 sm:px-3 sm:py-3 text-center font-semibold text-gray-800 text-[10px] sm:text-sm min-w-[60px] sm:min-w-[80px]">
+                  <TableRow key={timeSlot} className="hover:bg-amber-50/40">
+                    <TableCell className="border border-amber-100 bg-white px-1 py-2 text-center text-[10px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm min-w-[60px] sm:min-w-[80px]">
                       {timeSlot === "自　習" ? "マイスタ" : timeSlot}
                     </TableCell>
                     {regularClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}
@@ -396,21 +396,21 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
           </div>
         </div>
 
-        <div className="border border-gray-300 bg-gray-50 shadow-sm rounded-lg overflow-hidden">
-          <div className="bg-gray-100 text-gray-800 font-bold text-center py-2 sm:py-4 text-sm sm:text-xl tracking-wide border-b border-gray-300">夜間部</div>
-          <div className="overflow-x-auto">
-            <Table className="w-full border-collapse table-fixed text-[10px] sm:text-sm">
+        <div className="surface-card overflow-hidden">
+          <div className="bg-slate-800 px-4 py-3 text-center text-sm font-bold tracking-wide text-white sm:px-6 sm:py-4 sm:text-xl">夜間部</div>
+          <div className="data-table-shell rounded-none border-x-0 border-b-0 border-t border-amber-100 shadow-none">
+            <Table className="min-w-[980px] border-collapse table-fixed text-[10px] sm:text-sm">
               <TableHeader>
-                <TableRow className="bg-gray-100">
-                  <TableHead className="border border-gray-300 bg-gray-100 px-1 py-1 sm:px-3 sm:py-3 text-center font-bold text-gray-700 text-[10px] sm:text-sm min-w-[80px] sm:min-w-[120px]">
+                <TableRow className="bg-amber-50/80 hover:bg-amber-50/80">
+                  <TableHead className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]">
                     時限
                   </TableHead>
                   {nursingClassGroups.map((group) => (
                     <TableHead
                       key={group}
-                      className="border border-gray-300 bg-gray-100 px-1 py-1 sm:px-3 sm:py-3 text-center font-bold text-gray-700 text-[10px] sm:text-sm min-w-[100px] sm:min-w-[140px]"
+                      className="border border-amber-100 bg-amber-50/80 px-1 py-2 text-center text-[10px] font-bold text-slate-600 sm:px-3 sm:py-3 sm:text-sm min-w-[100px] sm:min-w-[140px]"
                     >
-                      <div className="truncate" title={group}>
+                      <div className="mobile-ellipsis" title={group}>
                         {group}
                       </div>
                     </TableHead>
@@ -419,8 +419,8 @@ const ClassroomTable: React.FC<ClassroomTableProps> = ({
               </TableHeader>
               <TableBody>
                 {nursingTimeSlotsOrder.map((timeSlot) => (
-                  <TableRow key={timeSlot} className="hover:bg-gray-100">
-                    <TableCell className="border border-gray-300 bg-white px-1 py-1 sm:px-3 sm:py-3 text-center font-semibold text-gray-800 text-[10px] sm:text-sm min-w-[80px] sm:min-w-[120px]">
+                  <TableRow key={timeSlot} className="hover:bg-amber-50/40">
+                    <TableCell className="border border-amber-100 bg-white px-1 py-2 text-center text-[10px] font-semibold text-slate-700 sm:px-3 sm:py-3 sm:text-sm min-w-[80px] sm:min-w-[120px]">
                       {timeSlot}
                     </TableCell>
                     {nursingClassGroups.map((group) => renderCell(timeSlot as TimeSlot, group))}

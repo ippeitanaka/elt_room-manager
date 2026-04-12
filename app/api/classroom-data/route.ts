@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 import { getClassroomData } from "@/lib/classrooms"
 import { format, parse } from "date-fns"
-import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -31,6 +32,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const supabase = createRouteHandlerClient({ cookies })
     const body = await request.json()
     const { date, timeSlot, classGroup, classroom } = body
 

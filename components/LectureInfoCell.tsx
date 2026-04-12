@@ -61,12 +61,13 @@ export const LectureInfoCell: React.FC<LectureInfoCellProps> = ({ lectureName, t
   if (!lectureName && !teacherName) return null
   
   return (
-    <div className="mt-1 leading-tight text-center text-gray-700 space-y-1">
+    <div className="mt-1 space-y-1 text-center leading-tight text-slate-600">
       {lectureName && (
         <div
           ref={lectureNameRef}
-          className="whitespace-normal sm:whitespace-nowrap overflow-hidden"
-          style={isMobile ? { fontSize: "0.75rem" } : { fontSize: `${fontSize}px` }}
+          className="mobile-ellipsis whitespace-nowrap"
+          style={isMobile ? { fontSize: "0.64rem" } : { fontSize: `${fontSize}px` }}
+          title={lectureName}
         >
           {lectureName === "マイスタディ" ? (
             <>
@@ -79,7 +80,7 @@ export const LectureInfoCell: React.FC<LectureInfoCellProps> = ({ lectureName, t
         </div>
       )}
       {teacherName && (
-        <div className="text-gray-500 text-[0.65rem] sm:text-xs whitespace-normal sm:whitespace-nowrap">
+        <div className="mobile-ellipsis text-[0.58rem] text-slate-400 sm:text-xs" title={teacherName}>
           {teacherName}
         </div>
       )}

@@ -46,54 +46,65 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
   }
 
   const handleTodayClick = () => {
-    const today = new Date();
+    const today = new Date()
     setSelectedDate(today)
   }
 
   return (
-  <div className="container mx-auto py-3 px-2 sm:py-12 sm:px-6 bg-gray-50 min-h-[80vh] font-sans">
-      {/* ヘッダー部分 - タイトルを左に、日付選択を右に配置 */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-10">
-        <div className="flex items-center mb-2 sm:mb-0">
-          <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-8 sm:h-12 w-auto mr-2 sm:mr-3" />
-          <h1 className="text-lg sm:text-3xl font-bold text-gray-800 tracking-wide">
-            <span className="text-gray-700">ELT</span> <span className="text-gray-500">本日の教室</span>
-          </h1>
+    <div className="page-shell min-h-screen">
+      <div className="hero-panel mb-4 sm:mb-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/images/elt-firefighter.png" alt="ELTキャラクター" className="h-12 w-auto sm:h-14" />
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.24em] text-amber-200/90">ELT ROOM MANAGER</p>
+              <h1 className="text-2xl font-bold text-white sm:text-4xl">本日の教室案内</h1>
+              <p className="mt-1 text-xs text-slate-300 sm:text-sm">白ベースと暖色アクセントで再構成した月間カレンダー基調の表示です。</p>
+            </div>
+          </div>
+
+          <div className="surface-subtle flex flex-wrap items-center gap-2 p-2 sm:gap-3 sm:p-3">
+            <Button
+              onClick={handlePrevDayClick}
+              variant="outline"
+              size="sm"
+              className="min-w-[4.75rem] bg-white/90"
+            >
+              前の日
+            </Button>
+            <DatePicker date={selectedDate} onSelect={handleDateChange} />
+            <Button
+              onClick={handleTodayClick}
+              variant="default"
+              size="sm"
+              className="bg-amber-500 text-white hover:bg-amber-600"
+              disabled={isToday(selectedDate)}
+            >
+              今日
+            </Button>
+            <Button
+              onClick={handleNextDayClick}
+              variant="outline"
+              size="sm"
+              className="min-w-[4.75rem] bg-white/90"
+            >
+              次の日
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-3">
-          <Button
-            onClick={handlePrevDayClick}
-            variant="outline"
-            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
-          >
-            前の日
-          </Button>
-          <DatePicker date={selectedDate} onSelect={handleDateChange} />
-          <Button
-            onClick={handleTodayClick}
-            variant="outline"
-            className="bg-gray-700 hover:bg-gray-800 border border-gray-700 text-white font-bold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
-            disabled={isToday(selectedDate)}
-          >
-            今日
-          </Button>
-          <Button
-            onClick={handleNextDayClick}
-            variant="outline"
-            className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-2 py-1 sm:px-4 sm:py-2 shadow-none rounded-none text-xs sm:text-base"
-          >
-            次の日
-          </Button>
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-200 sm:text-sm">
+          <span className="rounded-full bg-white/10 px-3 py-1.5">日付を切り替えて教室配置を確認</span>
+          <span className="rounded-full bg-white/10 px-3 py-1.5">スマホでは文字を縮小し横スクロール優先</span>
         </div>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-4 sm:py-6 text-sm sm:text-lg text-gray-500 font-semibold animate-pulse">データを読み込んでいます...</div>
+        <div className="surface-card px-4 py-8 text-center text-sm font-semibold text-slate-500 sm:text-lg">データを読み込んでいます...</div>
       ) : error ? (
-        <div className="text-center py-4 sm:py-6 text-sm sm:text-lg text-red-500 font-semibold">{error}</div>
+        <div className="surface-card px-4 py-8 text-center text-sm font-semibold text-red-500 sm:text-lg">{error}</div>
       ) : (
-        <div className="bg-white border border-gray-200 p-2 sm:p-8">
+        <div className="surface-card p-3 sm:p-6">
           <ClassroomTable
             data={dailyData}
             isAdminView={false}
@@ -104,14 +115,13 @@ export function ClassroomSchedule({ dailyData, selectedDate, setSelectedDate, co
           />
         </div>
       )}
-      <div className="mt-10 flex justify-between items-center">
-        <Link href="/admin">
-          <Button variant="outline" className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none">
+      <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:items-center sm:justify-between">
+        <Link href="/admin" className="w-full sm:w-auto">
+          <Button variant="outline" className="w-full bg-white sm:w-auto">
             教室管理
           </Button>
         </Link>
-        {/* 更新ボタンは親でfetchDataを呼ぶため、ここでは何もしない */}
-        <Button onClick={() => {}} variant="outline" className="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 font-semibold px-4 py-2 shadow-none rounded-none">
+        <Button onClick={() => {}} variant="outline" className="w-full bg-white sm:w-auto">
           更新
         </Button>
       </div>

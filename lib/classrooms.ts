@@ -1,5 +1,5 @@
 import { format, parse } from "date-fns"
-import { supabase } from "./supabase"
+import { hasSupabaseConfig, supabase } from "./supabase"
 
 export type ClassroomType =
   | "1F実習室"
@@ -45,8 +45,32 @@ export const nursingTimeSlots: TimeSlot[] = ["5限目", "6限目", "マイスタ
 // 有効な時限の配列（チェック制約と一致）
 export const VALID_TIME_SLOTS: TimeSlot[] = ["1限目", "2限目", "昼食", "3限目", "4限目", "5限目", "6限目", "自　習", "補　習", "マイスタ（午前）", "マイスタ（午後）", "補習（午前）", "補習（午後）", "再試験"]
 
+function createEmptyDailyData(): DailyClassroomData {
+  return {
+    "1限目": {},
+    "2限目": {},
+    昼食: {},
+    "3限目": {},
+    "4限目": {},
+    "5限目": {},
+    "6限目": {},
+    "自　習": {},
+    "補　習": {},
+    "マイスタ（午前）": {},
+    "マイスタ（午後）": {},
+    "補習（午前）": {},
+    "補習（午後）": {},
+    再試験: {},
+  }
+}
+
 export async function getClassroomData(date: string): Promise<DailyClassroomData> {
   try {
+    if (!hasSupabaseConfig()) {
+      console.warn("Supabase environment variables are not configured. Returning empty classroom data.")
+      return createEmptyDailyData()
+    }
+
     console.log("Fetching classroom data for date:", date)
     const parsedDate = parse(date, "yyyy-MM-dd", new Date())
     if (isNaN(parsedDate.getTime())) {
@@ -68,42 +92,12 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
 
     if (!data || data.length === 0) {
       console.log("No data found for date:", formattedDate)
-      return {
-        "1限目": {},
-        "2限目": {},
-        昼食: {},
-        "3限目": {},
-        "4限目": {},
-        "5限目": {},
-        "6限目": {},
-        "自　習": {},
-        "補　習": {},
-        "マイスタ（午前）": {},
-        "マイスタ（午後）": {},
-        "補習（午前）": {},
-        "補習（午後）": {},
-        再試験: {},
-      }
+      return createEmptyDailyData()
     }
 
     console.log("Received data:", data)
 
-    const dailyData: DailyClassroomData = {
-      "1限目": {},
-      "2限目": {},
-      昼食: {},
-      "3限目": {},
-      "4限目": {},
-      "5限目": {},
-      "6限目": {},
-      "自　習": {},
-      "補　習": {},
-      "マイスタ（午前）": {},
-      "マイスタ（午後）": {},
-      "補習（午前）": {},
-      "補習（午後）": {},
-      再試験: {},
-    }
+    const dailyData: DailyClassroomData = createEmptyDailyData()
 
     data.forEach((item) => {
       if (item.time_slot && item.class_group) {
@@ -126,6 +120,10 @@ export async function getClassroomData(date: string): Promise<DailyClassroomData
 }
 
 export async function saveClassroomData(date: string, data: DailyClassroomData) {
+  if (!hasSupabaseConfig()) {
+    throw new Error("Supabase environment variables are not configured.")
+  }
+
   const assignments = []
 
   for (const [timeSlot, groups] of Object.entries(data)) {
